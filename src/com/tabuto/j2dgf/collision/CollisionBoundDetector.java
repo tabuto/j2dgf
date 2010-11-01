@@ -111,14 +111,14 @@ boolean Bounce = false;
 		for (int i=0; i< group1.getSize();i++)
 			{
 			if (group1.getSprite(i).isActive())
-			 if (  group1.getSprite(i).xc - group1.getSprite(i).r < 0 || 
-					 group1.getSprite(i).xc + group1.getSprite(i).r > this.w ||
-					   group1.getSprite(i).yc - group1.getSprite(i).r < 0 ||
-					     group1.getSprite(i).yc + group1.getSprite(i).r > this.h
+			 if (  group1.getSprite(i).getX() - group1.getSprite(i).getWest() < 0 || 
+					 group1.getSprite(i).getX() + group1.getSprite(i).getEast() > this.w ||
+					   group1.getSprite(i).getY() - group1.getSprite(i).getNorth() < 0 ||
+					     group1.getSprite(i).getY() + group1.getSprite(i).getSouth() > this.h
 				)
 				 {
 				 this.CollisionAction(group1.group.get(i) );
-				 group1.group.get(i).move();
+				 group1.getSprite(i).move();
 				 }
 			}
 	}
@@ -138,6 +138,8 @@ boolean Bounce = false;
 			Bounce(s);
 	}
 	
+	public void CollisionAction(int hash1,int hash2){};
+	
 	/**
 	 * Change the Sprite angle to simulate an elastic collision
 	 * with the boundary
@@ -149,17 +151,17 @@ boolean Bounce = false;
 
   	  int wall=0;
   	  
-  	if ( s.xc - s.r < 0  ) wall=3;
-	    if (s.xc+s.r>this.w) wall=2;
-	    if (s.yc-s.r<0) wall=1;
-	    if (s.yc+s.r>this.h) wall=0;
+  	    if (s.getX() - s.getWest() < 0  ) wall=3;
+	    if (s.getX() + s.getEast() > this.w) wall=2;
+	    if (s.getY() - s.getNorth() < 0 ) wall=1;
+	    if (s.getY() + s.getSouth() > this.h) wall=0;
   	  
   	  switch (wall)
 	    {   
 	      case 0:
 	      case 1: s.setAngleRadians( 2.0*Math.PI - s.getAngle() ); break;
-	      case 2:
-	      case 3:  s.setAngleRadians( 1.0*Math.PI - s.getAngle() ); break;
+	      case 2: s.setAngleRadians( Math.PI + s.getAngle() ); break;
+	      case 3:  s.setAngleRadians( Math.PI - s.getAngle() ); break;
 	    }
 	}
 	
@@ -170,41 +172,17 @@ boolean Bounce = false;
 	protected void Through(Sprite s)
 	{  
 	
-	if ( s.xc < 0  ) s.xc = this.w - s.r;
-	if ( s.xc  > this.w  ) s.xc = 0 + s.r;
-	if ( s.yc < 0  ) s.yc = this.h - s.r;
-	if ( s.yc  > this.h  ) s.yc = 0 + s.r;
+	if ( s.getX() < 0  ) s.setX(this.w - s.getWest());
+	if ( s.getX()  > this.w  ) s.setX( 0 + s.getEast());
+	if ( s.getY() < 0  ) s.setY(this.h - s.getSouth() );
+	if ( s.getY()  > this.h  ) s.setY( 0 + s.getNorth() );
 	  
 	}
 	
+	//TODO: A collision that simulate a bounce
 	public void Bounce(Sprite s)
 	{
-		if (s.xc - s.r < 100 || s.yc - s.r < 100 || s.xc + s.r > (s.w -100) || s.yc + s.r > (s.h -100)   )
-			s.setSpeed( (int) s.getSpeed() / 2 );
-		
-		if (s.xc - s.r < 50 || s.yc - s.r < 50 || s.xc + s.r > (s.w -50) || s.yc + s.r > (s.h -50)   )
-			s.setSpeed( (int) s.getSpeed() / 4 );
-		
-		if (s.xc - s.r < 10 || s.yc - s.r < 10 || s.xc + s.r > (s.w -10) || s.yc + s.r > (s.h -10)   )
-			s.setSpeed( 10 );
-		
-		  int wall=0;
-	  	  
-		  	if ( s.xc - s.r < 10  ) wall=3;
-			    if (s.xc+s.r>this.w -10) wall=2;
-			    if (s.yc-s.r<10) wall=1;
-			    if (s.yc+s.r>this.h -10) wall=0;
-		  	  
-		  	  switch (wall)
-			    {   
-			      case 0:
-			      case 1: s.setAngleRadians( 2.0*Math.PI - s.getAngle() ); break;
-			      case 2:
-			      case 3:  s.setAngleRadians( 1.0*Math.PI - s.getAngle() ); break;
-			    }
-		
-		  	if (s.xc - s.r > 100 || s.yc - s.r > 100 || s.xc + s.r > (s.w + 100) || s.yc + s.r > (s.h -100)   )
-				s.setSpeed( s.DefaultSpeed );
+
 		  	  
 	}
 	

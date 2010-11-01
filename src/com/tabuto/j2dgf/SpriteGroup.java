@@ -3,7 +3,7 @@
 * Project Name: J2DGame
 * Date: 11/ott/2010
 * Titolo: SpriteGroup.java
-* Versione: 0.1 Rev.:
+* Versione: 0.4 Rev.:
 **/
 
 /*
@@ -41,7 +41,7 @@ import java.util.Vector;
  * 
  * @author tabuto83
  * 
- * @version 0.1.0
+ * @version 0.4.0
  */
 public class SpriteGroup {
 
@@ -97,7 +97,7 @@ public void setGroupName(String s){GroupName=s;}
  {
 	 int index;
 	 index = FindSprite(p);
-	 group.get(index).ACTIVE=false;
+	 //group.get(index).Deactivate();
 	 group.removeElementAt(index);
 	 group.trimToSize();
 	 
@@ -114,7 +114,7 @@ public void setGroupName(String s){GroupName=s;}
 	 int i;
 	 for (i=0; i<size; i++)
 	 {
-		 if (group.get(i).getId() == p.getId())
+		 if (group.get(i).hashCode()== p.hashCode())
 			 break;
 		 
 		 
@@ -138,14 +138,14 @@ public void setGroupName(String s){GroupName=s;}
   * @param id
   * @return s {@link Sprite}
   */
- public Sprite getSpriteById(int id)
+ public Sprite getSpriteByHash(int hash)
  {
 
 	 int size = group.size();
 	 int i;
 	 for (i=0; i<size; i++)
 	 {
-		 if (group.get(i).getId() == id)
+		 if (group.get(i).hashCode() == hash)
 			 break;
 		  	
 	 }
@@ -163,6 +163,7 @@ public void setGroupName(String s){GroupName=s;}
 	 
  }
  
+ 
  /**
   * Set true the group ACTIVE
   */
@@ -177,12 +178,12 @@ public void setGroupName(String s){GroupName=s;}
   * Set false the ACTIVE flag of every sprite owened by this group.
   * Set false the ACTIVE flag of this group
   */
- public void DeactiveAll()
+/* public void DeactiveAll()
  {
 	 int size = group.size();
 	 int i;
 	 for (i=0; i<size; i++)
-		 group.get(i).Deactivate();
+		 //group.get(i).Deactivate();
 	 
 	 this.ACTIVE = false;
 	 
@@ -192,6 +193,7 @@ public void setGroupName(String s){GroupName=s;}
   * Set true the ACTIVE flag of every sprite owened by this group.
   * Set true the ACTIVE flag of this group
   */
+ /*
  public void ActiveAll()
  {
 	 int size = group.size();
@@ -201,7 +203,7 @@ public void setGroupName(String s){GroupName=s;}
 	 
 	 this.ACTIVE = true;
  }
- 
+ */
  /**
   * Return the state of this group
   * @return boolean ACTIVE

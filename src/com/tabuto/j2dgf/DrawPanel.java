@@ -2,7 +2,7 @@
 * @author Francesco di Dio
 * Date: 11 Ottobre 2010 18.14
 * Titolo: DrawPanel.java
-* Versione: 0.1 Rev.:
+* Versione: 0.4 Rev.:
 */
 
 
@@ -52,7 +52,7 @@ import com.tabuto.j2dgf.collision.CollisionManager;
  * 
  * @author tabuto83
  *
- * @version 0.1.0
+ * @version 0.4.0
  */
 
 public abstract class DrawPanel extends Panel {
@@ -64,7 +64,7 @@ public abstract class DrawPanel extends Panel {
 	/**
 	 * Sleep value for the thread. Default value: 10
 	 */
-	int sleep=10;
+	private int sleep=10;
 	 /**
 	  * Dimension DIM
 	  * Dimension of the canvasPanel
@@ -84,15 +84,15 @@ public abstract class DrawPanel extends Panel {
 	 /**
 	  * The color panel's background
 	  */
-	 public Color background;
+	 protected Color background;
 	 /**
 	  * CONSTRUCTOR
 	  * <p>
 	  * public DrawingPanel(int w, int h)
 	  * <p>
 	  * Constructor of <code>DrawingPanel</code> that declares the new dimension of the Panel;
-	  * @param w int
-	  * @param h int
+	  * @param <code>int</code> width
+	  * @param <code>int</code> height
 	  */
 	 public DrawPanel(int w, int h)
 		{
@@ -119,6 +119,12 @@ public abstract class DrawPanel extends Panel {
 	 public void setDimension(Dimension dim) {DIM=dim;}
 	 
 	 /**
+	  * Return the Panel's <code>Dimension</code>
+	  * @return Dimension {@link DrawPanel#DIM}
+	  */
+	 public Dimension getDimension(){return DIM;}
+	 
+	 /**
 	  * Return the panel's BufferStrategy
 	  * @return bs
 	  */
@@ -131,16 +137,45 @@ public abstract class DrawPanel extends Panel {
 	 public void setBufferStrategy(BufferStrategy b){bs=b;}
 	 
 	 /**
-	  * Set the panel's repainting sleep time 
-	  * @param sl
+	  * Set the panel's repainting sleep time.<br>
+	  * Default value: 10
+	  * @param time <code>int</code>
 	  */
-	 public void setSleep(int sl){sleep=sl;}
+	 public void setSleep(int time)
+	 {
+		 if (time>0)
+		 sleep=time;
+	 }
 	 
 	 /**
 	  * Return the panel's repainting sleep time 
 	  * @return sleep int
 	  */
 	 public int getSleep(){return sleep;}
+	 
+	 /**
+	  * Return the Background Color 
+	  * @return {@link java.awt.Color} Background
+	  */
+	 public Color getBackgroundColor(){return this.background;}
+	 
+	 /**
+	  * Set new background color as parameter b
+	  * @param {@link java.awt.Color} b
+	  */
+	 public void setBackgroundColor(Color b){this.background=b;}
+	 
+	 /**
+	  * Set new background color as a new RGB component color
+	  * @param r <code>int</code> red component value (0-255)
+	  * @param g <code>int</code> green component value (0-255)
+	  * @param b <code>int</code> blue component value (0-255)
+	  */
+	 public void setBackgroundColor(int r, int g, int b)
+	 {
+		 Color B = new Color(r,g,b);
+		 this.background = B;
+	 }
 	 
 	 /**
 	  * Refresh the panel to draw the new position of the sprite
