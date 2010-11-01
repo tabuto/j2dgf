@@ -2,7 +2,7 @@
 * @author Francesco di Dio
 * Date: 11 Ottobre 2010
 * Titolo: CollisionManager.java
-* Versione: 0.1 Rev.:
+* Versione: 0.4 Rev.:
 */
 
 /*

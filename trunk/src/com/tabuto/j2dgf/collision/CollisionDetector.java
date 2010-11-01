@@ -4,11 +4,12 @@ package com.tabuto.j2dgf.collision;
 import com.tabuto.j2dgf.Sprite;
 import com.tabuto.j2dgf.SpriteGroup;
 
+
 /**
 * @author Francesco di Dio
 * Date: 11 Ottobre 2010 
 * Titolo: CollisionDetector.java
-* Versione: 0.1 Rev.:
+* Versione: 0.4 Rev.:
 */
 
 /*
@@ -50,7 +51,7 @@ import com.tabuto.j2dgf.SpriteGroup;
  * 
  * @author tabuto83
  * 
- * @version 0.1.0
+ * @version 0.4.0
  * 
  * 
  * @see com.tabuto.j2dgame.collision.CollisionManager
@@ -69,7 +70,7 @@ public abstract class CollisionDetector {
 	protected double DISTANCE;
 	
 	/** Set the DISTANCE variable @see {@link CollisionDetector#DISTANCE} */
-	public void setDistance(double d){DISTANCE = d;}
+	public void setDistance(double d){if(DISTANCE>=0)DISTANCE = d;}
 	
 	/**Get the DISTANCE variable @see {@link CollisionDetector#DISTANCE} */
 	public double getDistance(){return DISTANCE;}
@@ -103,21 +104,19 @@ public abstract class CollisionDetector {
 		group1 = pg1;
 		group2 = pg2;
 		twoGroups = true;
+		DISTANCE = 0;
 		
 	}
 	
 	/**
-	 * Called when a collision is detected.
+	 * Called when a collision is detected. Calls the routines to do when two Sprite of their own groups collides.
 	 * <p>
-	 * @param  s1 {@link Sprite}
-	 * @param  s2 {@link Sprite}
+	 * @param hashSprite1 <code>int</code> Hash code of first collided Sprite 
+	 * @param hashSprite2 <code>int</code> Hash code of second collided Sprite 
 	 */
+	public abstract void CollisionAction(int hashSprite1, int hashSprite2);
 	
-	public void CollisionAction(Sprite s1, Sprite s2)
-	{
-		
-		
-	}
+	//public abstract void CollisionAction(int HashSprite1, int HashSprite2);
 	
 	/**
 	 * Check the sprite group in search of collisions. When a collision occour it calls a CollisionAction method.
@@ -130,11 +129,19 @@ public abstract class CollisionDetector {
 		{
 			for(int i=0; i< group1.getSize(); i++ )
 				for (int j=0; i < group2.getSize();j++)
-				  if ( getDistance( group1.getSprite(i) , group2.getSprite(j) ) <= (group1.getSprite(i).r + group1.getSprite(j).r + DISTANCE) )
-					  {
-					  CollisionAction(group1.getSprite(i), group2.getSprite(j) );
+				  if ( group1.getSprite(i).isCollide(group2.getSprite(j),DISTANCE ) )
+					  
+				     {
+					  CollisionAction(group1.getSprite(i).hashCode(), group2.getSprite(j).hashCode() );
+					  
+					  int defaultSpeed1 = group1.getSprite(i).getSpeed();
+					  int defaultSpeed2 = group2.getSprite(j).getSpeed();
+					  group1.getSprite(i).setSpeed(1);
+					  group2.getSprite(j).setSpeed(1);
 					  group1.getSprite(i).move();
 					  group2.getSprite(j).move();
+					  group1.getSprite(i).setSpeed(defaultSpeed1);
+					  group2.getSprite(j).setSpeed(defaultSpeed2);
 					  }
 					
 		}
@@ -145,10 +152,15 @@ public abstract class CollisionDetector {
 				for (int j=count;j<group1.getSize();j++)
 				{
 					if (j!=i)
-					if ( getDistance( group1.getSprite(i) , group1.getSprite(j) ) <= (group1.getSprite(i).r + group1.getSprite(j).r + DISTANCE) )
+					if ( 
+						group1.getSprite(i).isCollide( group1.getSprite(j),DISTANCE ) 
+							
+					    )
+						
+						
 					{  
 						if (group1.getSprite(i).isActive() && group1.getSprite(j).isActive() )
-						CollisionAction(group1.getSprite(i), group1.getSprite(j) );
+						CollisionAction(group1.getSprite(i).hashCode(), group1.getSprite(j).hashCode() );
 						int defaultSpeed1 = group1.getSprite(i).getSpeed();
 						int defaultSpeed2 = group1.getSprite(j).getSpeed();
 						
@@ -164,20 +176,7 @@ public abstract class CollisionDetector {
 		}
 	}
 	
-	/**
-	 * Return the distance between two sprite
-	 * @param  p1 {@link Sprite}
-	 * @param  p2 {@link Sprite}
-	 * @return distance int 
-	 */
-	public double getDistance( Sprite p1, Sprite p2 )
-	
-	{
-		   double temp1 =  (  p1.xc - p2.xc ) *  ( p1.xc - p2.xc );
-	       double temp2 =  (  p1.yc - p2.yc ) *  (  p1.yc - p2.yc );
-		   double distance = Math.sqrt( temp1 + temp2 );
-		   return distance;
-	}
+
 	
 }
 

@@ -1,8 +1,8 @@
 /**
 * @author Francesco di Dio
-* Date: 12 Ottobre 2010 18.14
+* Date: 28 Ottobre 2010 18.14
 * Titolo: Sprite.java
-* Versione: 0.1 Rev.:
+* Versione: 0.4 Rev.4:
 */
 
 
@@ -25,8 +25,8 @@
  */
 
 /*
- * Classe astratta che rappresenta un generico sprite
- * 
+ * Classe astratta che rappresenta un generico sprite. Nella nuova versione,
+ * posizione,velocità=modulo e direzione sono espressi usando l'oggetto vettore.
  */
 
 
@@ -35,10 +35,13 @@ package com.tabuto.j2dgf;
 import java.awt.Dimension;
 import java.awt.Graphics2D;
 
+import com.tabuto.util.Point;
+import com.tabuto.util.Vettore;
+
 
 
 /**
- * abstract class <code>Sprite</code> 
+ * Abstract class <code>Sprite</code> 
  * <p>
  * Sprite is an Abstract Class that represents an object able draws himself and move on
  * a playfield of fixed dimension.
@@ -53,24 +56,19 @@ import java.awt.Graphics2D;
  * 
  * @author tabuto83
  * 
- * @version 0.1.0
+ * @version 0.4.0
  * 
  * @see com.tabuto.j2dgame.SpriteGroup
  * 
  */
 
-public abstract class Sprite {
+public abstract class Sprite implements Drawable {
 
 	/**
-	 * 
-	 * Sprite radius
+	 * {@link Vettore} vector represent position, direction and speed of each sprite
 	 */
-	public int r; 
+	public Vettore vector;
 	
-	/**
-	 * Sprite's center coordinates
-	 */
-	public double xc, yc;
 	
 	/**
 	 * Sprite height
@@ -97,9 +95,10 @@ public abstract class Sprite {
 	protected boolean collided; 
 	
 	/**
-	 * Sprite's Angle Direction in radians
+	 * Indicate the pixel above, under, on left and right of Sprite's center.
+	 * Use it for precision collision.
 	 */
-	protected double a;     
+	protected int NORTH, SOUTH, EAST, WEST;
 	
 	/**
 	 * The Dimension of the playfield where sprites live. 
@@ -109,21 +108,28 @@ public abstract class Sprite {
 	 * playfiled.width return width (1024);
 	 * playfield.height return heigth (768);
 	 * </pre>
+	 * @see Dimension
 	 */
-	
 	protected Dimension d;  
 	
 	/**
 	 *  The speed of the sprite 
 	 *  @see java.awt.Dimension
 	 */
-    protected int s; 
+    protected int speed; 
 
     /**
      * The default SPeed of the sprite
      */
     public int DefaultSpeed = 50; 
 
+    /**
+     * Max radius of Sprite for increase the speed of CheckCollision method;
+     * If the distance of two sprite is greater of this value, CheckCollision dosn't
+     * check other value.
+     */
+    protected int CollidedRadius;
+    
     /**
      * 
      * 	CONSTRUCTOR
@@ -138,13 +144,18 @@ public abstract class Sprite {
      *  
      * 
      */
+
     
 	  public Sprite(Dimension dim, double posX, double posY)
 	  {
 		  d=dim;
-		  xc=posX;
-		  yc=posY;
 		  ACTIVE=true;
+		  vector = new Vettore(posX, posY);
+		  vector.setNewModule(this.speed);
+		  id= this.hashCode();
+		  
+		  NORTH=0;SOUTH=0;EAST=0; WEST=0;
+		  
 	  };
 	  
 	  /**
@@ -160,8 +171,8 @@ public abstract class Sprite {
 	   */
 	  public void setAngleDegree(double angle)
 	  {
-		  if (angle>=0 && angle < 361)
-		  a = Math.toRadians(90 + angle);
+		  angle = Math.toRadians(angle);
+		 vector.setNewDirectionRadians( angle);
 	  }
 	  
 	  /**
@@ -170,7 +181,7 @@ public abstract class Sprite {
 	   */
 	  public void setAngleRadians(double angle)
 	  {
-		  a = angle;
+		  vector.setNewDirectionRadians( angle);
 	  }
 	  
 	  
@@ -196,22 +207,44 @@ public abstract class Sprite {
 	  public void setSpeed(int speed)
 	  {
 		  if (speed>=0 && speed<=100)
-			  s=speed;
+			  this.speed=speed;
 		  else
-			  s=DefaultSpeed;
+			  this.speed=DefaultSpeed;
+		  
+		  vector.setNewModule(this.speed);
 	  }
 	  
 	  /**
-	   * Set the x Sprite's center coordinate 
-	   * @param x double
+	   * Set the sprite center Position
+	   * @param pos {@link Point}
 	   */
-	  public void setX(double x){xc=x;}
+	  public void setPosition(Point pos)
+	  {
+		  vector.setNewOrigin(pos);
+	  }
+	  
+	  /**
+	   * Set the sprite center Position
+	   * 
+	   */
+	  public void setPosition(double x, double y)
+	  {
+		  vector.setNewOrigin(x,y);
+	  }
+	  
+	  public Point getPosition(){return vector.origin;}
+	  
+	  /**
+	   * Set the x Sprite's center coordinate 
+	   * @param x <code>double</code>
+	   */
+	  public void setX(double x){vector.setNewOriginX(x);}
 	  
 	  /**
 	   * Set the y Sprite's center coordinate 
-	   * @param y double
+	   * @param y <code>double</code>
 	   */
-	  public void setY(double y) {yc=y;}  
+	  public void setY(double y) {vector.setNewOriginY(y);}  
 	  
 	  /**
 	   * Return the sprite's number id
@@ -223,25 +256,25 @@ public abstract class Sprite {
 	   * Return the sprite's Angle direction in radians
 	   * @return {@link Sprite#a} double 
 	   */
-	  public double getAngle(){return a;}
+	  public double getAngle(){return vector.getDirectionRadians();}
 	 
 	  /**
 	   * Return the sprite's speed
 	   * @return {@link Sprite#s} double 
 	   */
-	  public int getSpeed(){return s;}
+	  public int getSpeed(){return this.speed;}
 	  
 	  /**
 	   * Return the sprite's center x coordinate
-	   * @return {@link Sprite#xc} double 
+	   * @return double 
 	   */
-	  public double getX(){return xc;}
+	  public double getX(){return vector.origin.x;}
 	  
 	  /**
 	   * Return the sprite's center y coordinate
-	   * @return Sprite#yc double
+	   * @return double
 	   */
-	  public double getY(){return yc;}
+	  public double getY(){return vector.origin.y;}
 	  
 	  /**
 	   * Return the sprite's Active state
@@ -266,24 +299,47 @@ public abstract class Sprite {
 	  public void drawMe(Graphics2D g)
 	  {
 		if(ACTIVE)
-			ThisIsMe(g);
-			
+			ThisIsMe(g);	
 	  }
 	 
+	 /**
+	  * Return the pixel above the Sprite center; 
+	  * @return int
+	  */
+	  public int getNorth(){return NORTH;}
+	  
+	/**
+     * Return the pixel under the Sprite's center; 
+     * @return int
+	 */
+	  public int getSouth(){return SOUTH;}
+		  
+		 /**
+		  * Return the pixel on the right of the Sprite's center; 
+		  * @return int
+		  */
+		  public int getEast(){return EAST;}  
+
+		  /**
+		   * Return the pixel on the right of the Sprite's center; 
+		   * @return int
+		   */
+	      public int getWest(){return WEST;}  
+		  
 	  /** 
-	   * Set sprite's angle in order to reach the nx,ny coordinate's point
-	   * @param  nx double 
-	   * @param  ny double
+	   * Set sprite's direction in order to reach the nx,ny coordinate's point
+	   * @param  nx <code>double</code> X direction which Sprite move on
+	   * @param  ny <code>double</code> Y direction which Sprite move on
 	   * @see Sprite#move()
 	   */
 	  public void moveTo(double nx, double ny)
 	  {
-              if ((ACTIVE) && (xc != nx && yc != ny) )
+              if ((ACTIVE) && (this.vector.origin.x != nx && this.vector.origin.y != ny) )
               {       
-              double angle =  Math.toDegrees( Math.PI/2 + Math.atan2(ny-this.yc, nx-this.xc));
+              double angle =  Math.toDegrees( Math.PI/2 + Math.atan2(ny-this.vector.origin.y, nx-this.vector.origin.x));
            
               //Set the new angle
-              this.a = angle;
+              vector.setNewDirectionRadians(angle);
               }
 	  }
        
@@ -293,16 +349,13 @@ public abstract class Sprite {
 	   */
       public void move()
       {
-    	  
-    	  if (ACTIVE && s>0)
+    	  if ( ACTIVE && this.getSpeed()> 0 )
     	  {  
     	      
-    		  double nx = (this.xc + this.getMySpeed() * Math.cos(this.a) );
-    		  double ny = (this.yc + this.getMySpeed() * Math.sin(this.a));
-    		  this.xc = nx;
-    		  this.yc = ny;
+    		  double nx = (this.vector.origin.x + this.getMySpeed() * Math.cos(this.vector.getDirectionRadians() ) );
+    		  double ny = (this.vector.origin.y + this.getMySpeed() * Math.sin(this.vector.getDirectionRadians()));
+    		  this.vector.setNewOrigin(nx,ny);
     	  }
-    	  
       }
       
       /**
@@ -310,17 +363,163 @@ public abstract class Sprite {
        */
       protected double getMySpeed()
       {
-    	  double speedy = this.s * 0.021;
+    	  double speedy = this.speed * 0.021;
     	  return speedy;
     	  
       }
+     
+      /*
+      public void finalize()
+      {
+      }
+      */
       
+      /**
+       * Return true if this <code>Sprite</code> collides with other.
+       */
       
-              
+      public boolean isCollide(Sprite other)
+      {
+    	  double distance = this.getPosition().getDistance(other.getPosition());
+    	  boolean result=false;
+    	  
+          search:
+    	  while(true)  
+    	  {
+    		  if (distance > ( this.CollidedRadius + other.CollidedRadius) )
+    		  {break search;}
+    		  
+    		  if(distance<this.NORTH+other.SOUTH )
+    		  {result=true;break search;}
+    		  
+    		  if(distance<this.SOUTH + other.NORTH )
+    		  {result=true;break search;}
+    		  
+    		  if(distance<this.EAST+other.WEST )
+    		  {result=true;break;}
+    		
+    		  if(distance<this.WEST+other.EAST )
+    		  {result=true;break search;}
+    		  
+    	  double NE1 = Math.sqrt( (Math.pow(this.NORTH,2) + Math.pow(this.EAST, 2) ) );
+    	  double SW2 = Math.sqrt( (Math.pow(other.SOUTH,2) + Math.pow(other.WEST, 2) ) );
+    	  
+    	  if (distance < NE1+SW2)
+    	  	{result=true;break search;}
+    	  
+    	  double NE2 = Math.sqrt( (Math.pow(other.NORTH,2) + Math.pow(other.EAST, 2) ) );
+    	  double SW1 = Math.sqrt( (Math.pow(this.SOUTH,2) + Math.pow(this.WEST, 2) ) );
+    	  
+    	  if (distance < NE2+SW1)
+  	  			{result=true;break search;}
+    	  
+    	  double NW1 = Math.sqrt( (Math.pow(this.NORTH,2) + Math.pow(this.WEST, 2) ) );
+    	  double SE2 = Math.sqrt( (Math.pow(other.SOUTH,2) + Math.pow(other.EAST, 2) ) );
+    	  
+    	  if (distance < NW1+SE2)
+  			{result=true;break search;}
+    	  
+    	  double SE1 = Math.sqrt( (Math.pow(this.SOUTH,2) + Math.pow(this.EAST, 2) ) ); 	  
+    	  double NW2 = Math.sqrt( (Math.pow(other.NORTH,2) + Math.pow(other.WEST, 2) ) );
+    	  
+    	  if (distance < SE1+NW2)
+			{result=true;break search;}
+    	  
+    	  break search;
+      }
+      
+    	  return result;
+   }
+      /**
+       * Return true if this <code>Sprite</code> collides with other or if
+       * the distance beetween sprite is minus than DIST
+       * @param other <code>Sprite</code>
+       * @param DIST <code>int</code> distance which behind the sprites collide;
+       * @return boolean
+       */
+      public boolean isCollide(Sprite other, double DIST)
+      {
+    	  double distance = this.getPosition().getDistance(other.getPosition());
+    
+    	  boolean result=false;
+    	  
+          search:
+    	  while(true)  
+    	  {
+    		  if (distance > ( this.CollidedRadius + other.CollidedRadius + DIST) )
+    		  {break search;}
+    		  
+    		  //if (DIST> this.CollidedRadius && distance < DIST  )
+    		  //{result=true;break search;}
+    		  
+    		  if(distance<this.NORTH+other.SOUTH + DIST)
+    		  {result=true;break search;}
+    		  
+    		  if(distance<this.SOUTH + other.NORTH + DIST )
+    		  {result=true;break search;}
+    		  
+    		  if(distance<this.EAST+other.WEST + DIST )
+    		  {result=true;break;}
+    		
+    		  if(distance<this.WEST+other.EAST + DIST )
+    		  {result=true;break search;}
+    		  
+    	  double NE1 = Math.sqrt( (Math.pow(this.NORTH,2) + Math.pow(this.EAST, 2) ) );
+    	  double SW2 = Math.sqrt( (Math.pow(other.SOUTH,2) + Math.pow(other.WEST, 2) ) );
+    	  
+    	  if (distance < NE1+SW2+DIST)
+    	  	{result=true;break search;}
+    	  
+    	  double NE2 = Math.sqrt( (Math.pow(other.NORTH,2) + Math.pow(other.EAST, 2) ) );
+    	  double SW1 = Math.sqrt( (Math.pow(this.SOUTH,2) + Math.pow(this.WEST, 2) ) );
+    	  
+    	  if (distance < NE2+SW1+DIST)
+  	  			{result=true;break search;}
+    	  
+    	  double NW1 = Math.sqrt( (Math.pow(this.NORTH,2) + Math.pow(this.WEST, 2) ) );
+    	  double SE2 = Math.sqrt( (Math.pow(other.SOUTH,2) + Math.pow(other.EAST, 2) ) );
+    	  
+    	  if (distance < NW1+SE2+DIST)
+  			{result=true;break search;}
+    	  
+    	  double SE1 = Math.sqrt( (Math.pow(this.SOUTH,2) + Math.pow(this.EAST, 2) ) ); 	  
+    	  double NW2 = Math.sqrt( (Math.pow(other.NORTH,2) + Math.pow(other.WEST, 2) ) );
+    	  
+    	  if (distance < SE1+NW2+DIST)
+			{result=true;break search;}
+    	  
+    	  break search;
+      }
+      
+    	  return result;
+   }
+      
+      /**
+       * Set the collision radius as the Greater value of NORT,SOUTH,EAST WEST variables;
+       * This method is necessary to simplify and improve speed in the CollisionCheck.
+       */
+      private void setCollisionRadius()
+      {
+    	   this.CollidedRadius = (int)    Math.max( Math.max(this.NORTH, this.SOUTH), Math.max(this.EAST, this.WEST) );
+      }
+      
+      /**
+       * Set the
+       * @param n <code>int</code>max pixel above the Sprite center
+       * @param s <code>int</code>max pixel under the Sprite center
+       * @param w <code>int</code>max pixel on the left of the Sprite center
+       * @param e <code>int</code>max pixel on the right of the Sprite center
+       */
+      protected void setMaxOffset(int n,int s, int w, int e)
+      {
+    	  NORTH=n;SOUTH=s;EAST=e; WEST=w;
+    	  this.setCollisionRadius();
+      }
+      
 }
 
 
-	  
+	 
 	  
 
 	  
