@@ -435,7 +435,7 @@ public Vettore(Point o, double d, double m)
  * @see Vettore#Vettore(double, double, boolean)
  * @see Vettore#Vettore(double, double, double, double)
  * @see Vettore#Vettore(Point, Point, boolean)
- * @see Vettore#Vettore(Point, double, double
+ * @see Vettore#Vettore(Point, double, double)
  * @see Vettore#Vettore(double, double, double, double, boolean)
  */
 
@@ -472,7 +472,7 @@ public Vettore(Point o, double d, double m, boolean rif)
  * @see Vettore#Vettore(double, double, boolean)
  * @see Vettore#Vettore(double, double, double, double)
  * @see Vettore#Vettore(Point, Point, boolean)
- * @see Vettore#Vettore(Point, double, double
+ * @see Vettore#Vettore(Point, double, double)
  * @see Vettore#Vettore(double, double, double, double, boolean)
  */
 
@@ -710,10 +710,8 @@ public double getComponentY(){return this.j;}
  * and {@link #end} coordinates. 
  * <br>
  * THE {@link #origin} and {@link #end}  ARE NOT CHANGING BY THIS METHOD
- * @param ox
- * @param oy
- * @param ex
- * @param ey
+ * @param o Point
+ * @param e Point
  */
 
 public void setDirectionByPoints(Point o, Point e )
@@ -732,10 +730,10 @@ public void setDirectionByPoints(Point o, Point e )
  * and End Point [ex,ey] coordinates. 
  * <br>
  * THE {@link #origin} and {@link #end}  ARE NOT CHANGING BY THIS METHOD
- * @param ox
- * @param oy
- * @param ex
- * @param ey
+ * @param ox double
+ * @param oy double
+ * @param ex double
+ * @param ey double
  */
 public void setDirectionByPoints(double ox,double oy,double ex,double ey )
 {
@@ -749,7 +747,7 @@ public void setDirectionByPoints(double ox,double oy,double ex,double ey )
 /**
  * Set the new {@link #direction} in degrees and calculate the new values of {@link #end}
  * and components [{@link #i}, {@link #j}]
- * @param rad double
+ * @param d double 
  */
 public void setNewDirectionDegree(int d)
 	{
@@ -894,7 +892,7 @@ public void setNewModule(double m)
 /**
  * Set the new {@link #origin} coordinates  and calculate the new value of component [{@link #i}, {@link #j}], 
  * and {@link Vettore#end}, this method leaves unchanged {@link #module} and {@link #direction}
- * @param p Point
+ * @param o Point
  */
 public void setNewOrigin(Point o)
 	{
@@ -966,7 +964,7 @@ public boolean equalsTo(Vettore v2)
 
 /**
  * Return the <code>Vettore</code> {@link #module}
- * @return
+ * @return {@link #module}
  */
 public double getModule(){return this.module;}
 
@@ -992,7 +990,7 @@ public void setPrecision(double p)
 
 /**
  * Return the precision parameter {@link #eps}, to represents double values
- * @return precision double 
+ * @return precision double {@link #eps}
  */
 public double getPrecision(){return eps;}
 

@@ -1,8 +1,8 @@
 /**
 * @author Francesco di Dio
-* Date: 28 Ottobre 2010 18.14
+* Date: 05 Novembre 2010 18.14
 * Titolo: Sprite.java
-* Versione: 0.4 Rev.4:
+* Versione: 0.5 Rev.7:
 */
 
 
@@ -33,6 +33,7 @@
 package com.tabuto.j2dgf;
 
 import java.awt.Dimension;
+import java.awt.Graphics;
 import java.awt.Graphics2D;
 
 import com.tabuto.util.Point;
@@ -46,7 +47,7 @@ import com.tabuto.util.Vettore;
  * Sprite is an Abstract Class that represents an object able draws himself and move on
  * a playfield of fixed dimension.
  * <p>
- * It has got an ACTIVE flag and a {@linkplain #ThisIsMe(Graphics2D)} method called by {@linkplain #drawMe(Graphics2D)} 
+ * It has got an ACTIVE flag and a {@linkplain #ThisIsMe(Graphics)} method called by {@linkplain #drawMe(Graphics)} 
  * method when ACTIVE is true; <br>
  * Every Sprite has a position defined by two variables (xc and yc) that identifies the sprite's center;
  * Every sprite also has speed and angle variable.<br>
@@ -58,7 +59,7 @@ import com.tabuto.util.Vettore;
  * 
  * @version 0.4.0
  * 
- * @see com.tabuto.j2dgame.SpriteGroup
+ * @see SpriteGroup
  * 
  */
 
@@ -254,13 +255,13 @@ public abstract class Sprite implements Drawable {
 	  
 	  /**
 	   * Return the sprite's Angle direction in radians
-	   * @return {@link Sprite#a} double 
+	   * @return Angle Radians double 
 	   */
 	  public double getAngle(){return vector.getDirectionRadians();}
 	 
 	  /**
 	   * Return the sprite's speed
-	   * @return {@link Sprite#s} double 
+	   * @return {@link Sprite#speed} double 
 	   */
 	  public int getSpeed(){return this.speed;}
 	  
@@ -290,13 +291,13 @@ public abstract class Sprite implements Drawable {
 	  /**
 	   * This method must be override to implements the graphics elements of the sprite
 	   */
-	  protected abstract void ThisIsMe(Graphics2D g);
+	  protected abstract void ThisIsMe(Graphics g);
 	  
 	  /**
 	   * This method draw the sprite if it is ACTIVE
 	   * @param g Graphics2D
 	   */
-	  public void drawMe(Graphics2D g)
+	  public void drawMe(Graphics g)
 	  {
 		if(ACTIVE)
 			ThisIsMe(g);	

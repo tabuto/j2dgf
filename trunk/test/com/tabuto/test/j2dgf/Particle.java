@@ -10,6 +10,7 @@ package com.tabuto.test.j2dgf;
 
 import java.awt.Color;
 import java.awt.Dimension;
+import java.awt.Graphics;
 import java.awt.Graphics2D;
 
 import com.tabuto.j2dgf.Sprite;
@@ -49,10 +50,10 @@ public class Particle extends Sprite{
 	
 	public Color getColor(){return c;}
 	
-	public void ThisIsMe(Graphics2D g2d)
+	public void ThisIsMe(Graphics g)
 	{
-		 g2d.setColor( this.getColor() );
-	     g2d.fillOval((int)this.getX() - this.radius,(int) this.getY() - this.radius, 2*this.radius,2*this.radius);
+		 g.setColor( this.getColor() );
+	     g.fillOval((int)this.getX() - this.radius,(int) this.getY() - this.radius, 2*this.radius,2*this.radius);
 	}
 	
 	public void setRadius(int r)

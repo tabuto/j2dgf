@@ -1,8 +1,8 @@
 /**
 * @author Francesco di Dio
-* Date: 11 Ottobre 2010
+* Date: 05 Novembre 2010
 * Titolo: CollisionManager.java
-* Versione: 0.4 Rev.:
+* Versione: 0.5 Rev.:
 */
 
 /*
@@ -40,14 +40,14 @@ import java.util.Vector;
  * class <code>CollisionManager</code>
  * <p>
  * This class manage a vector of CollisionDetector. <p>
- * Add Every CollisionDetector to this class, and the method {@link #RunCollisionManager()} checks every  {@linkplain com.tabuto.j2dgame.collision.CollisionDetector}
- * using the method {@linkplain com.tabuto.j2dgame.collision.CollisionDetector#checkCollision()}
+ * Add Every CollisionDetector to this class, and the method {@link #RunCollisionManager()} checks every  {@linkplain CollisionDetector}
+ * using the method {@linkplain CollisionDetector#checkCollision()}
  *
  * @author tabuto83
  * 
  * @version 0.1.0
  * 
- * @see java.util.Vector
+ * @see Vector
  */
 
 public class CollisionManager {
@@ -97,7 +97,7 @@ public class CollisionManager {
 	}
 	
 	/**
-	 * Calls every {@linkplain com.tabuto.j2dgame.Sprite } in all CollisionDetector.
+	 * Calls every {@linkplain Sprite } in all CollisionDetector.
 	 * registered in this <code>CollisionManager</code>.
 	 */
 	public void RunCollisionManager()

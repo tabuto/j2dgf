@@ -1,13 +1,14 @@
 /**
 * @author Francesco di Dio
-* Date: 28 Ottobre 2010 18.14
+* Date: 05 Novembre 2010 18.14
 * Titolo: Drawable.java
-* Versione: 0.4 Rev.a:
+* Versione: 0.5 Rev.a:
 */
 
 
 package com.tabuto.j2dgf;
 
+import java.awt.Graphics;
 import java.awt.Graphics2D;
 
 
@@ -18,15 +19,15 @@ import java.awt.Graphics2D;
  *
  * @version 0.4.0
  * 
- * @see com.tabuto.j2dgame.Sprite
+ * @see Sprite
  */
 public interface Drawable {
 	
 	 /**
 	  * Represent the graphics of the object implements the Drawable interface.
-	  * @param Graphics2D g
+	  * @param g Graphics 
 	  */
-	 public void drawMe(Graphics2D g);
+	 public void drawMe(Graphics g);
 	 
 	 /**
 	  * Override this method to implements the routines to move your object

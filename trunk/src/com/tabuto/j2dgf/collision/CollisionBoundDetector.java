@@ -1,3 +1,10 @@
+/**
+* @author Francesco di Dio
+* Date: 05 Novembre 2010 
+* Titolo: CollisionBoundDetector.java
+* Versione: 0.5 Rev.:
+*/
+
 package com.tabuto.j2dgf.collision;
 
 import java.awt.Dimension;
@@ -5,12 +12,7 @@ import java.awt.Dimension;
 import com.tabuto.j2dgf.Sprite;
 import com.tabuto.j2dgf.SpriteGroup;
 
-/**
-* @author Francesco di Dio
-* Date: 11 Ottobre 2010 
-* Titolo: CollisionBoundDetector.java
-* Versione: 0.1 Rev.:
-*/
+
 
 /*
  * Copyright (c) 2010 Francesco di Dio.
@@ -55,8 +57,8 @@ import com.tabuto.j2dgf.SpriteGroup;
  * 
  * @version 0.1.0
  * 
- * @see com.tabuto.j2dgame.collision.CollisionManager
- * @see com.tabuto.j2dgame.collision.CollisionDetector
+ * @see CollisionManager
+ * @see CollisionDetector
  * 
  */
 public class CollisionBoundDetector extends CollisionDetector {
@@ -101,9 +103,9 @@ boolean Bounce = false;
 	 * Check the position of each Sprite in the SpriteGroup registered in 
 	 * this CollisionDetector, if a Sprite collide with the boundary, 
 	 * the method calls a CollisionAction.
-	 * @see com.tabuto.j2dgame.Sprite
-	 * @see com.tabuto.j2dgame.collision.CollisionDetector
-	 * @see com.tabuto.j2dgame.collision.CollisionDetector#CollisionAction(Sprite, Sprite)
+	 * @see Sprite
+	 * @see CollisionDetector
+	 * @see CollisionDetector#CollisionAction(Sprite, Sprite)
 	 */
 	public void checkCollision()
 	{
@@ -205,7 +207,7 @@ boolean Bounce = false;
 	}
 	
 	/**
-	 * Set true the flag {@link CollisionBoundDetector#Bounce in order to use the method {@link #Bounce(Sprite) }
+	 * Set true the flag {@link CollisionBoundDetector#Bounce} in order to use the method {@link #Bounce(Sprite) }
 	 */
 	public void useBounce()
 	{
