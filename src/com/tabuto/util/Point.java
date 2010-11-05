@@ -77,17 +77,16 @@ public class Point {
 	 *  <p>
 	 *  Point(double a, double b)
 	 *  <p>
-	 *  Creates new <code>Point</code> in Cartesian Plane with coordinates [a,b]
+	 *  Creates new <code>Point</code> in Cartesian Plane with coordinates [0,0]
 	 *  <p>
-	 *  @param The coordinates of the new Point
 	 *  @see Point#Point()
 	 */
 	public Point(double a, double b) { setPoint(a,b); }
 	
 	/**
 	 * Accept two double numbers as the new Point's coordinates 
-	 * @param The coordinates of the new Point
-	 * @param b
+	 * @param a <code>double</code> The X coordinates of the new Point
+	 * @param b <code>double</code> The X coordinates of the new Point
 	 */
 	public void setPoint(double a, double b){this.x=a; this.y=b;}
 	
@@ -105,19 +104,19 @@ public class Point {
 	
 	/**
 	 * Set the new x coordinates of the <code>Point</code>
-	 * @param The new Point's X coordinate
+	 * @param a <code>double</code> Point's X coordinate
 	 */
 	public void setX(double a){this.x =a;}
 	
 	/**
 	 * Set the new y coordinates of the <code>Point</code>
-	 * @param The new Point's Y coordinate
+	 * @param a <code>double</code> Point's Y coordinate
 	 */
 	public void setY(double a){this.y =a;}
 	
 	/**
 	 * Return the distance beetwin the <code>Point</code> p and this <code>Point</code>
-	 * @param The second point for calculate distance
+	 * @param p <code>Point</code> The second point for calculate distance
 	 * @return The Distance between points
 	 */
 	public double getDistance(Point p)

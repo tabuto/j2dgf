@@ -1,20 +1,17 @@
+/**
+* @author Francesco di Dio
+* Date: 05 Novembre 2010 18.14
+* Titolo: DPanel.java
+* Versione: 0.5.0 Rev:34:
+*/
+
 package com.tabuto.test.j2dgf;
 
-import java.awt.Graphics2D;
-import com.tabuto.j2dgf.DrawPanel;
-import com.tabuto.j2dgf.Sprite;
+import java.awt.Graphics;
 import com.tabuto.j2dgf.SpriteGroup;
 import com.tabuto.j2dgf.collision.CollisionBoundDetector;
 import com.tabuto.j2dgf.collision.CollisionDetector;
-import com.tabuto.util.Vettore;
-
-/**
-* @author Francesco di Dio
-* Date: 22 Ottobre 2010 18.14
-* Titolo: DPanel.java
-* Versione: 0.4.0 Rev:34:
-*/
-
+import com.tabuto.j2dgf.gui.J2DCanvasPanel;
 
 /*
  * Copyright (c) 2010 Francesco di Dio.
@@ -39,7 +36,7 @@ import com.tabuto.util.Vettore;
  * 
  */
 
-public class DPanel extends DrawPanel{
+public class MyCanvas extends J2DCanvasPanel{
 	
 	/**
 	 * 
@@ -58,7 +55,7 @@ public class DPanel extends DrawPanel{
 	CollisionBoundDetector cbd;
 
 	//Constructor Method
-	public DPanel(int w, int h){super(w,h);}
+	public MyCanvas(int w, int h){super(w,h);}
 	
 	//Override init stuff
 	public void initStuff()
@@ -95,25 +92,15 @@ public class DPanel extends DrawPanel{
 			pArray[i].setAngleRadians(Math.random()*2 * Math.PI );
 			//Random radius
 		    pArray[i].setRadius(  (int)( 1+Math.random()*11 )); // Assegno un raggio casuale
-			//Add the new Particle in the ParticleGroup
+			pArray[i].setSpeed(80);
+		    //Add the new Particle in the ParticleGroup
 		    alfaGroup.AddSprite(pArray[i]);
-		    
-		    //Add the ID
-		    //pArray[i].setId(i);
 		}		
 		
-		/*
-		Particle Sole = new Particle(DIM,512,512);
-		Sole.r= 10;
-		Sole.setSpeed(0);
-		Sole.setId(N_Particles);
-		pArray[N_Particles] = Sole;
-		alfaGroup.AddSprite(Sole);
-		*/
     }
 
 	//Override the method for Sprite movement
-	 protected void drawSprite(Graphics2D g)
+	 protected void drawSprite(Graphics g)
 	    {
 		    //Disegna gli oggetti sul panel e ne controlla la posizione
 	    	for(int i=0;i<N_Particles;i++)
@@ -171,4 +158,5 @@ public class DPanel extends DrawPanel{
 	}
 	
 }
+
 

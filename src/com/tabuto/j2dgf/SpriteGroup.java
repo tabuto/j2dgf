@@ -1,9 +1,9 @@
 /**
 * @author Francesco di Dio
 * Project Name: J2DGame
-* Date: 11/ott/2010
+* Date: 05 /Nov/2010
 * Titolo: SpriteGroup.java
-* Versione: 0.4 Rev.:
+* Versione: 0.5 Rev.:
 **/
 
 /*
@@ -47,7 +47,6 @@ public class SpriteGroup {
 
 /**
  * The Sprite vector group
- * @see #java.util.Vector
  */
 public Vector<Sprite> group = new Vector<Sprite>();
 private String GroupName;
@@ -135,8 +134,9 @@ public void setGroupName(String s){GroupName=s;}
  
  /**
   * Find a sprite with a specific ID
-  * @param id
+  * @param hash int Sprite's Object Hash
   * @return s {@link Sprite}
+  * @see Object#hashCode()
   */
  public Sprite getSpriteByHash(int hash)
  {

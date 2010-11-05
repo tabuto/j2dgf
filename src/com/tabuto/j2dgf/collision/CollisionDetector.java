@@ -1,16 +1,14 @@
-package com.tabuto.j2dgf.collision;
+/**
+* @author Francesco di Dio
+* Date: 05 Novembre 2010 
+* Titolo: CollisionDetector.java
+* Versione: 0.5 Rev.:
+*/
 
+package com.tabuto.j2dgf.collision;
 
 import com.tabuto.j2dgf.Sprite;
 import com.tabuto.j2dgf.SpriteGroup;
-
-
-/**
-* @author Francesco di Dio
-* Date: 11 Ottobre 2010 
-* Titolo: CollisionDetector.java
-* Versione: 0.4 Rev.:
-*/
 
 /*
  * Copyright (c) 2010 Francesco di Dio.
@@ -54,13 +52,13 @@ import com.tabuto.j2dgf.SpriteGroup;
  * @version 0.4.0
  * 
  * 
- * @see com.tabuto.j2dgame.collision.CollisionManager
- * @see com.tabuto.j2dgame.collision.CollisionBoundDetector
+ * @see CollisionManager
+ * @see CollisionBoundDetector
  */
 
 public abstract class CollisionDetector {
 
-	/** Boolean variable. Is true if the collisionDetector checks two {@linkplain com.tabuto.j2dgame.SpriteGroup}*/
+	/** Boolean variable. Is true if the collisionDetector checks two {@linkplain SpriteGroup}*/
 	protected boolean twoGroups;
 	/**SpriteGroups */
 	protected SpriteGroup group1;

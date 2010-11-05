@@ -1,8 +1,8 @@
 /**
 * @author Francesco di Dio
-* Date: 11 Ottobre 2010 18.14
-* Titolo: DrawPanel.java
-* Versione: 0.4 Rev.:
+* Date: 05 Novembre 2010 18.14
+* Titolo: J2DCanvasPanel.java
+* Versione: 0.5.0 Rev.:
 */
 
 
@@ -31,31 +31,33 @@
  */
 
 
-package com.tabuto.j2dgf;
+package com.tabuto.j2dgf.gui;
+
 
 import java.awt.Color;
 import java.awt.Dimension;
+import java.awt.Graphics;
 import java.awt.Graphics2D;
-import java.awt.Panel;
+import java.awt.Image;
 import java.awt.Toolkit;
 import java.awt.image.BufferStrategy;
-
+import javax.swing.JPanel;
 import com.tabuto.j2dgf.collision.CollisionManager;
 
 /**
- * Abstract class <code>DrawingPanel</code> extends Panel.
+ * Abstract class <code>J2DCanvasPanel</code> extends JPanel.
  * <p>
  * This Class implements a CavasPanel where the sprite "live". <br>
  * This Class should be had a CollisionDetector inner classes;
  * 
- * @see com.tabuto.j2dgame.collision.CollisionDetector
+ * @see CollisionDetector
  * 
  * @author tabuto83
  *
- * @version 0.4.0
+ * @version 0.5.0
  */
 
-public abstract class DrawPanel extends Panel {
+public class J2DCanvasPanel extends JPanel implements Runnable {
 
 	/**
 	 * 
@@ -67,9 +69,20 @@ public abstract class DrawPanel extends Panel {
 	private int sleep=10;
 	 /**
 	  * Dimension DIM
-	  * Dimension of the canvasPanel
+	  * Real Dimension of the canvasPanel
 	  */
 	 protected Dimension DIM = new Dimension(1,1);
+	 
+	 protected boolean running = true;
+
+	 private Image BufferedImage;
+	 
+	 
+	 private boolean PLAY=true;
+	
+	 private boolean STOP=false;
+	 
+	 
 	 
 	 /**
 	  * A BufferStrategy to implements ActiveRendering and DoubleBuffer
@@ -88,17 +101,21 @@ public abstract class DrawPanel extends Panel {
 	 /**
 	  * CONSTRUCTOR
 	  * <p>
-	  * public DrawingPanel(int w, int h)
+	  * public J2DCanvasPanel(int w, int h)
 	  * <p>
-	  * Constructor of <code>DrawingPanel</code> that declares the new dimension of the Panel;
-	  * @param <code>int</code> width
-	  * @param <code>int</code> height
+	  * Constructor of <code>J2DCanvasPanel</code> that declares the new dimension of the JPanel;
+	  * @param w <code>int</code> real width
+	  * @param h <code>int</code> real height
 	  */
-	 public DrawPanel(int w, int h)
+	 public J2DCanvasPanel(int w, int h)
 		{
 			DIM = new Dimension(w,h);
+			//VIS = new Dimension(vw,vh);
 			background = new Color(0,0,0); //Default value = BLACK
 			cm = new CollisionManager();
+			//setAutoscrolls(true);
+	        setDoubleBuffered(true);
+	        
 		}
 	 
 	 /**
@@ -110,7 +127,7 @@ public abstract class DrawPanel extends Panel {
 	  *  </ul>
 	  *  N.B. The {@link CollisionManager} has been initialize in the Costructor method.
 	  */
-	 public abstract void initStuff();
+	 public void initStuff(){};
 	 
 	 /**
 	  * Set the Dimension (width and heigth) of the panel
@@ -120,7 +137,7 @@ public abstract class DrawPanel extends Panel {
 	 
 	 /**
 	  * Return the Panel's <code>Dimension</code>
-	  * @return Dimension {@link DrawPanel#DIM}
+	  * @return Dimension {@link J2DCanvasPanel#DIM}
 	  */
 	 public Dimension getDimension(){return DIM;}
 	 
@@ -132,12 +149,12 @@ public abstract class DrawPanel extends Panel {
 	 
 	 /**
 	  * Set the panel's BufferStrategy 
-	  * @param b {@link BufferStrategy}
+	  * @param BufferStrategy {@link BufferStrategy}
 	  */
 	 public void setBufferStrategy(BufferStrategy b){bs=b;}
 	 
 	 /**
-	  * Set the panel's repainting sleep time.<br>
+	  * Set the panel's thread sleep time.<br>
 	  * Default value: 10
 	  * @param time <code>int</code>
 	  */
@@ -148,7 +165,7 @@ public abstract class DrawPanel extends Panel {
 	 }
 	 
 	 /**
-	  * Return the panel's repainting sleep time 
+	  * Return the panel's thread sleep time 
 	  * @return sleep int
 	  */
 	 public int getSleep(){return sleep;}
@@ -161,7 +178,7 @@ public abstract class DrawPanel extends Panel {
 	 
 	 /**
 	  * Set new background color as parameter b
-	  * @param {@link java.awt.Color} b
+	  * @param b {@link Color}
 	  */
 	 public void setBackgroundColor(Color b){this.background=b;}
 	 
@@ -178,26 +195,21 @@ public abstract class DrawPanel extends Panel {
 	 }
 	 
 	 /**
-	  * Refresh the panel to draw the new position of the sprite
+	  * Refresh the panel to draw the new position of the sprite in a buffer
 	  */
 	 public void drawStuff()
 	    {
 	            try
-	            {
-	            Graphics2D g = (Graphics2D)bs.getDrawGraphics();
-	            g.setColor(background);
-	            g.fillRect(0,0,DIM.width,DIM.height);
-	            
-				drawSprite(g);
-	            
-	            bs.show();
-	            Toolkit.getDefaultToolkit().sync();
-	            g.dispose();
-	            Thread.sleep(sleep);
+	            { 
+	            	BufferedImage = createImage(DIM.width, DIM.height);
+	            	Graphics buffer =  BufferedImage.getGraphics();
+	            	buffer.setColor(background);
+	            	buffer.fillRect(0, 0, DIM.width, DIM.height);      
+	            	drawSprite(buffer);          	
 	            }//end try
 	            catch (Exception e)
 	            {
-	                System.exit(0);
+	                System.exit(2);
 	            }
 	       
 		}   //end of DrawStuff
@@ -210,15 +222,112 @@ public abstract class DrawPanel extends Panel {
 	  * <pre>
 	  * for(i=0;MySpriteGroup.group.getSize()>i;i++)	   
       *    { 
-      *		MySpriteGroup.group.get(i).move();
+      *		MySpriteGroup.get(i).move();
       *		 cm.RunCollisionManager();
-      *		MySpriteGroup.group.get(i).drawMe(g2d);
+      *		MySpriteGroup.get(i).drawMe(g2d);
       *	  }
       *</pre>
-	  * @param g2d {@link Graphics2D}
+	  * @param g {@link Graphics}
 	  */
-	 protected abstract void drawSprite(Graphics2D g2d);
+	 protected void drawSprite(Graphics g){}
 	 
 	 
-	
+	 // get preferred ImagePanel size
+	 
+	 /**
+	  * Return the PreferredSize of this Panel as a {@link Dimension}
+	  */
+	 public Dimension getPreferredSize()
+	  {
+	     return DIM;
+	  }
+	 
+	 /**
+	  * Return the Minimum Size of the Panel as a {@link Dimension}
+	  */
+	 public Dimension getMinimumSize()
+	  {  
+	     return new Dimension(300,300);
+	  }
+
+	 /**
+	  * 
+	  */
+	  public void update(Graphics g) {
+		    paint(g);
+		  }
+	  
+	  /**
+	   * Draw the content of this CanvasPanel
+	   */
+	  public void run()
+	    /* Repeatedly update, render, sleep */
+	    {
+		  
+	      while(PLAY) {
+	    	drawStuff();   // render to a buffer
+	       panelDraw();  // draw buffer to screen
+	        try {
+	          Thread.sleep(sleep);  // sleep a bit
+	        }
+	        catch(InterruptedException ex){}
+	      }
+
+	    } // end of run()
+	  
+
+	  /**
+	   * Flush the content of the BufferImage on the Panel
+	   */
+	  private void panelDraw()
+	  {
+		  Graphics g;
+	      try {
+	        g = this.getGraphics();  // get the panel's graphic context
+
+	          g.drawImage(BufferedImage, 0, 0, null);
+	        Toolkit.getDefaultToolkit().sync();  // sync the display on some systems
+	        g.dispose();
+	      }
+	      catch (Exception e)
+	      { System.out.println("Graphics context error: " + e);  }
+		
+		  
+	  }
+	  
+	  //private void drawSprite(){Graphics2D g = (Graphics2D) this.getGraphics(); drawStuff(g);}
+	  /**
+	   * Stop the drawing of the Panel
+	   */
+	  public void Stop()
+	  {
+		  if (PLAY)
+  			{
+			  this.PLAY= false;
+			  this.STOP= true;
+			}
+		  else
+      		{
+			  this.PLAY=true;
+			  this.STOP=false;
+      		}
+	  }
+	  
+	  /**
+	   * Restart the Drawing of the panel after a previously {@link J2DCanvasPanel#Stop()}
+	   */
+	  public void Play()
+	  {
+		  this.PLAY=true;
+	  }
+	  
+	  /**
+	   * Draw a single frame animation on the CanvasPAnel
+	   */
+	  public void Step()
+	  {
+		  this.drawStuff();   // render to a buffer
+	       this.panelDraw();  // draw buffer to screen
+	  }
 }
+
