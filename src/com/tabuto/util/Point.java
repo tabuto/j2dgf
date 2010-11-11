@@ -2,11 +2,13 @@
 * @author Francesco di Dio
 * Date: 11 Ottobre 2010 20.36
 * Titolo: Point.java
-* Versione: 0.1 Rev.:1
+* Versione: 0.1.1 Rev.:1
 */
 
 
 package com.tabuto.util;
+
+import java.io.Serializable;
 
 
 
@@ -42,13 +44,17 @@ package com.tabuto.util;
  * 
  * @author tabuto83
  * 
- * @version 0.1.0
+ * @version 0.1.1
  * 
  * 
  */
 
-public class Point {
+public class Point implements Serializable {
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -1532905975817848364L;
 	/**
 	 * Point's x coordinate
 	 */

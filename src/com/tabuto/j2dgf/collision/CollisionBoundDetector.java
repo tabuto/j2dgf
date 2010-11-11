@@ -1,16 +1,17 @@
 /**
 * @author Francesco di Dio
-* Date: 05 Novembre 2010 
+* Date: 09 Novembre 2010 
 * Titolo: CollisionBoundDetector.java
-* Versione: 0.5 Rev.:
+* Versione: 0.6 Rev.:
 */
 
 package com.tabuto.j2dgf.collision;
 
 import java.awt.Dimension;
 
+import com.tabuto.j2dgf.Group;
 import com.tabuto.j2dgf.Sprite;
-import com.tabuto.j2dgf.SpriteGroup;
+//import com.tabuto.j2dgf.SpriteGroup;
 
 
 
@@ -55,7 +56,7 @@ import com.tabuto.j2dgf.SpriteGroup;
  * 
  * @author tabuto83
  * 
- * @version 0.1.0
+ * @version 0.6.0
  * 
  * @see CollisionManager
  * @see CollisionDetector
@@ -66,37 +67,32 @@ public class CollisionBoundDetector extends CollisionDetector {
 	/**
 	 * Dimension of the playfield
 	 */
-Dimension dim = new Dimension();
+private Dimension dim = new Dimension();
 
-private double w; //Weight
-private double h; //heigth
-	/**
-	 * Flag for Use a Reflection collision with the boundary
-	 */
-boolean Reflection=false;
+private enum Edges  {SOUTH, NORTH, EAST, WEST,NULL};
 
- 	/**
- 	 * Flag for Use a PassThrough with the boundary
- 	 */
-boolean Through=false;
+/**
+ * An <code>enum</code> for Use a Collision Bound ruoutines 
+ */
+private enum CollisionsBoundType {NULL, REFLECTION, THROUGH, BOUNCE};
 
-	/**
-	 * Flag for use a Bounch collision with the boundary
-	 */
-boolean Bounce = false;
+/**
+ * The actual CollisionBoundType
+ */
+private CollisionsBoundType collisionType = CollisionsBoundType.NULL;
+	
+
 	/**
 	 * CONSTRUCTOR
 	 * <p>
 	 * CollisionBoundDetector constructor
-	 * @param  sp1 {@link SpriteGroup}
+	 * @param  sp1 {@link Group}
 	 * @param  d {@link Dimension}
 	 */
-	public CollisionBoundDetector(SpriteGroup sp1, Dimension d)
+	public CollisionBoundDetector(Group<? extends Sprite> sp1, Dimension d)
 	{
 		super(sp1);
-		this.w = d.getWidth();
-		this.h = d.getHeight();
-		
+		this.dim=d;
 	}
 	
 	/** 
@@ -105,22 +101,21 @@ boolean Bounce = false;
 	 * the method calls a CollisionAction.
 	 * @see Sprite
 	 * @see CollisionDetector
-	 * @see CollisionDetector#CollisionAction(Sprite, Sprite)
 	 */
 	public void checkCollision()
 	{
 		
-		for (int i=0; i< group1.getSize();i++)
+		for (int i=0; i< group1.size();i++)
 			{
-			if (group1.getSprite(i).isActive())
-			 if (  group1.getSprite(i).getX() - group1.getSprite(i).getWest() < 0 || 
-					 group1.getSprite(i).getX() + group1.getSprite(i).getEast() > this.w ||
-					   group1.getSprite(i).getY() - group1.getSprite(i).getNorth() < 0 ||
-					     group1.getSprite(i).getY() + group1.getSprite(i).getSouth() > this.h
+			if (group1.get(i).isActive())
+			 if (  group1.get(i).getX() - group1.get(i).getWest() < 0 || 
+					 group1.get(i).getX() + group1.get(i).getEast() > this.dim.width ||
+					   group1.get(i).getY() - group1.get(i).getNorth() < 0 ||
+					     group1.get(i).getY() + group1.get(i).getSouth() > this.dim.height
 				)
 				 {
-				 this.CollisionAction(group1.group.get(i) );
-				 group1.getSprite(i).move();
+				 this.CollisionAction(group1.get(i) );
+				 group1.get(i).move();
 				 }
 			}
 	}
@@ -132,13 +127,17 @@ boolean Bounce = false;
 	 */
 	public void CollisionAction(Sprite s)
 	{
-		if (Reflection)
-			Reflection(s);
-		else if (Through)
-			Through(s);
-		else if (Bounce)
-			Bounce(s);
+		
+		switch(collisionType)
+		{
+		case REFLECTION:  Reflection(s);
+		case THROUGH: Through(s);
+		case BOUNCE: Bounce(s);
+		}
+		
 	}
+	
+	public void CollisionAction(Group g1,int i,int j){};
 	
 	public void CollisionAction(int hash1,int hash2){};
 	
@@ -151,19 +150,37 @@ boolean Bounce = false;
 	
 	{
 
-  	  int wall=0;
+  	    Edges edge=Edges.NULL;
+  	   // int wall;
+  	    if (s.getX() - s.getWest() < 0  ) edge=Edges.WEST; //wall=3;
+	    if (s.getX() + s.getEast() > this.dim.width) edge = Edges.EAST;
+	    if (s.getY() - s.getNorth() < 0 ) edge = Edges.NORTH;
+	    if (s.getY() + s.getSouth() > this.dim.height) edge = Edges.SOUTH;
   	  
-  	    if (s.getX() - s.getWest() < 0  ) wall=3;
-	    if (s.getX() + s.getEast() > this.w) wall=2;
-	    if (s.getY() - s.getNorth() < 0 ) wall=1;
-	    if (s.getY() + s.getSouth() > this.h) wall=0;
-  	  
-  	  switch (wall)
+  	  switch (edge)
 	    {   
-	      case 0:
-	      case 1: s.setAngleRadians( 2.0*Math.PI - s.getAngle() ); break;
-	      case 2: s.setAngleRadians( Math.PI + s.getAngle() ); break;
-	      case 3:  s.setAngleRadians( Math.PI - s.getAngle() ); break;
+	      case SOUTH:
+	      
+	      case NORTH: s.setAngleRadians( 2*Math.PI - s.getAngle()); break;
+		 				
+	      case EAST: 
+				      { 
+		  	        if(s.getAngle()>Math.PI*1.5 && s.getAngle()<Math.PI*2)
+		  	        		s.setAngleRadians(3*Math.PI - s.getAngle());
+		  	        else
+		  	        		s.setAngleRadians( Math.PI - s.getAngle()); 
+		  	        
+		  	        break;
+			    	  }
+	    	  
+	      case WEST: { 
+	    	        if(s.getAngle()>Math.PI && s.getAngle()<Math.PI*1.5)
+	    	        		s.setAngleRadians(3*Math.PI - s.getAngle());
+	    	        else
+	    	        		s.setAngleRadians( Math.PI - s.getAngle()); 
+	    	        
+	    	        break;
+	      			  }
 	    }
 	}
 	
@@ -174,27 +191,27 @@ boolean Bounce = false;
 	protected void Through(Sprite s)
 	{  
 	
-	if ( s.getX() < 0  ) s.setX(this.w - s.getWest());
-	if ( s.getX()  > this.w  ) s.setX( 0 + s.getEast());
-	if ( s.getY() < 0  ) s.setY(this.h - s.getSouth() );
-	if ( s.getY()  > this.h  ) s.setY( 0 + s.getNorth() );
+	if ( s.getX() < 0  ) s.setX(this.dim.width - s.getWest());
+	if ( s.getX()  > this.dim.width  ) s.setX( 0 + s.getEast());
+	if ( s.getY() < 0  ) s.setY(this.dim.height - s.getSouth() );
+	if ( s.getY()  > this.dim.height  ) s.setY( 0 + s.getNorth() );
 	  
 	}
 	
 	//TODO: A collision that simulate a bounce
+	/**
+	 * NOT YET IMPLEMENTED
+	 */
 	public void Bounce(Sprite s)
 	{
-
-		  	  
+	  	  
 	}
-	
 	/**
 	 * Set true the flag {@link #Reflection} in order to use the method {@link #Reflection(Sprite)}
 	 */
 	public void useReflection()
 	{
-		Reflection = true;
-		Through = false;
+		collisionType = CollisionsBoundType.REFLECTION;
 	}
 	
 	/**
@@ -202,8 +219,7 @@ boolean Bounce = false;
 	 */
 	public void usePassThrough()
 	{
-		Reflection = false;
-		Through = true;
+		collisionType = CollisionsBoundType.THROUGH;
 	}
 	
 	/**
@@ -211,9 +227,7 @@ boolean Bounce = false;
 	 */
 	public void useBounce()
 	{
-		Reflection = false;
-		Through = false;
-		Bounce = true;
+		collisionType = CollisionsBoundType.BOUNCE;
 	}
 	
 }

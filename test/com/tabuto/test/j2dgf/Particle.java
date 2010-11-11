@@ -1,5 +1,3 @@
-package com.tabuto.test.j2dgf;
-
 
 /**
 * @author Francesco di Dio
@@ -8,10 +6,11 @@ package com.tabuto.test.j2dgf;
 * Versione: 0.4.0 Rev:34:
 */
 
+package com.tabuto.test.j2dgf;
+
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Graphics;
-import java.awt.Graphics2D;
 
 import com.tabuto.j2dgf.Sprite;
 /*
