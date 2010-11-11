@@ -2,13 +2,13 @@
 * @author Francesco di Dio
 * Date: 05 Novembre 2010 
 * Titolo: CollisionDetector.java
-* Versione: 0.5 Rev.:
+* Versione: 0.6 Rev.:
 */
 
 package com.tabuto.j2dgf.collision;
 
+import com.tabuto.j2dgf.Group;
 import com.tabuto.j2dgf.Sprite;
-import com.tabuto.j2dgf.SpriteGroup;
 
 /*
  * Copyright (c) 2010 Francesco di Dio.
@@ -45,26 +45,26 @@ import com.tabuto.j2dgf.SpriteGroup;
  * registered in one or two SpriteGroup.
  * <p>
  *  When a collision is checked, the class calls
- * a {@link #CollisionAction(Sprite, Sprite)}method for the collided sprites
+ * a {@link #CollisionAction(int, int)}method for the collided sprites
  * 
  * @author tabuto83
  * 
- * @version 0.4.0
+ * @version 0.6.0
  * 
  * 
  * @see CollisionManager
  * @see CollisionBoundDetector
  */
 
-public abstract class CollisionDetector {
+public class CollisionDetector  {
 
-	/** Boolean variable. Is true if the collisionDetector checks two {@linkplain SpriteGroup}*/
+	/** Boolean variable. Is true if the collisionDetector checks two {@link Group}*/
 	protected boolean twoGroups;
 	/**SpriteGroups */
-	protected SpriteGroup group1;
-	protected SpriteGroup group2;
+	protected Group<? extends Sprite> group1 = new Group();
+	protected Group<? extends Sprite> group2 = new Group();
 	
-	/**Represent the DISTANCE when the CollisionDetector calls {@link #CollisionAction(Sprite, Sprite)} */
+	/**Represent the DISTANCE when the CollisionDetector calls {@link #CollisionAction(int, int)} */
 	protected double DISTANCE;
 	
 	/** Set the DISTANCE variable @see {@link CollisionDetector#DISTANCE} */
@@ -80,12 +80,13 @@ public abstract class CollisionDetector {
 	 * CollisionDetector(SpriteGroup pg1)
 	 * <p>
 	 * The Constructor of CollisionDetector for collision between the same group elements.  
-	 * @param  pg1 {@link SpriteGroup}
+	 * @param  pg1 {@link Group}
 	 */
 	
-	public CollisionDetector(SpriteGroup pg1)
+	public CollisionDetector(Group<? extends Sprite> pg1)
 	{
 		group1 = pg1;
+		
 		twoGroups = false;
 		DISTANCE = 0;
 	}
@@ -94,10 +95,10 @@ public abstract class CollisionDetector {
 	 * CONSTRUCTOR
 	 * <p>
 	 * The Constructor of CollisionDetector for collision between elements of two groups.   
-	 * @param  pg1  {@link SpriteGroup}
-	 * @param  pg2  {@link SpriteGroup}
+	 * @param  pg1  {@link Group}
+	 * @param  pg2  {@link Group}
 	 */
-	public CollisionDetector (SpriteGroup pg1, SpriteGroup pg2)
+	public CollisionDetector (Group<? extends Sprite> pg1, Group<? extends Sprite> pg2)
 	{
 		group1 = pg1;
 		group2 = pg2;
@@ -106,18 +107,21 @@ public abstract class CollisionDetector {
 		
 	}
 	
+	
 	/**
 	 * Called when a collision is detected. Calls the routines to do when two Sprite of their own groups collides.
 	 * <p>
-	 * @param hashSprite1 <code>int</code> Hash code of first collided Sprite 
-	 * @param hashSprite2 <code>int</code> Hash code of second collided Sprite 
+	 * @param indexG1 <code>int</code> Hash code of first collided Sprite 
+	 * @param indexG2 <code>int</code> Hash code of second collided Sprite 
 	 */
-	public abstract void CollisionAction(int hashSprite1, int hashSprite2);
+	public void CollisionAction( int indexG1, int indexG2){};
 	
-	//public abstract void CollisionAction(int HashSprite1, int HashSprite2);
+	//public  void CollisionAction(Group<?> G1, int indexG1, 
+			                   // Group<?> G2, int indexG2){}
+	
 	
 	/**
-	 * Check the sprite group in search of collisions. When a collision occour it calls a CollisionAction method.
+	 * Check the sprite group in search of collisions. When a collision occurs it calls a CollisionAction method.
 	 */
 	public void checkCollision()
 	{
@@ -125,49 +129,49 @@ public abstract class CollisionDetector {
 		//Check if this class have to control one or two groups
 		if (twoGroups && group1.isActive() && group2.isActive() )
 		{
-			for(int i=0; i< group1.getSize(); i++ )
-				for (int j=0; i < group2.getSize();j++)
-				  if ( group1.getSprite(i).isCollide(group2.getSprite(j),DISTANCE ) )
+			for(int i=0; i< group1.size(); i++ )
+				for (int j=0; j < group2.size();j++)
+				  if ( group1.get(i).isCollide(group2.get(j),DISTANCE ) )
 					  
 				     {
-					  CollisionAction(group1.getSprite(i).hashCode(), group2.getSprite(j).hashCode() );
+					  CollisionAction( i,j);
 					  
-					  int defaultSpeed1 = group1.getSprite(i).getSpeed();
-					  int defaultSpeed2 = group2.getSprite(j).getSpeed();
-					  group1.getSprite(i).setSpeed(1);
-					  group2.getSprite(j).setSpeed(1);
-					  group1.getSprite(i).move();
-					  group2.getSprite(j).move();
-					  group1.getSprite(i).setSpeed(defaultSpeed1);
-					  group2.getSprite(j).setSpeed(defaultSpeed2);
+					  int defaultSpeed1 = group1.get(i).getSpeed();
+					  int defaultSpeed2 = group2.get(j).getSpeed();
+					  group1.get(i).setSpeed(1);
+					  group2.get(j).setSpeed(1);
+					  group1.get(i).move();
+					  group2.get(j).move();
+					  group1.get(i).setSpeed(defaultSpeed1);
+					  group2.get(j).setSpeed(defaultSpeed2);
 					  }
 					
 		}
 		else
 			if (group1.isActive())
 		{   
-			for (int i=0; i< group1.getSize();i++)
-				for (int j=count;j<group1.getSize();j++)
+			for (int i=0; i< group1.size();i++)
+				for (int j=count;j<group1.size();j++)
 				{
 					if (j!=i)
 					if ( 
-						group1.getSprite(i).isCollide( group1.getSprite(j),DISTANCE ) 
+						group1.get(i).isCollide( group1.get(j),DISTANCE ) 
 							
 					    )
 						
 						
 					{  
-						if (group1.getSprite(i).isActive() && group1.getSprite(j).isActive() )
-						CollisionAction(group1.getSprite(i).hashCode(), group1.getSprite(j).hashCode() );
-						int defaultSpeed1 = group1.getSprite(i).getSpeed();
-						int defaultSpeed2 = group1.getSprite(j).getSpeed();
+						if (group1.get(i).isActive() && group1.get(j).isActive() )
+						CollisionAction(i, j );
+						int defaultSpeed1 = group1.get(i).getSpeed();
+						int defaultSpeed2 = group1.get(j).getSpeed();
 						
-						group1.getSprite(i).setSpeed(1);
-						group1.getSprite(j).setSpeed(1);
-						group1.getSprite(i).move();
-						group1.getSprite(j).move();
-						group1.getSprite(i).setSpeed(defaultSpeed1);
-						group1.getSprite(j).setSpeed(defaultSpeed2);
+						group1.get(i).setSpeed(1);
+						group1.get(j).setSpeed(1);
+						group1.get(i).move();
+						group1.get(j).move();
+						group1.get(i).setSpeed(defaultSpeed1);
+						group1.get(j).setSpeed(defaultSpeed2);
 						count++;
 					}
 				}

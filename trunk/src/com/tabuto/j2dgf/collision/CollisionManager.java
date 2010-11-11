@@ -2,7 +2,7 @@
 * @author Francesco di Dio
 * Date: 05 Novembre 2010
 * Titolo: CollisionManager.java
-* Versione: 0.5 Rev.:
+* Versione: 0.6 Rev.:
 */
 
 /*
@@ -45,7 +45,7 @@ import java.util.Vector;
  *
  * @author tabuto83
  * 
- * @version 0.1.0
+ * @version 0.6.0
  * 
  * @see Vector
  */
@@ -57,6 +57,7 @@ public class CollisionManager {
 	 */
 	private Vector<CollisionDetector> CollisionsList; 
 	
+
 	
 	/**
 	 * CONSTRUCTOR 
@@ -69,6 +70,7 @@ public class CollisionManager {
 	{
 		CollisionsList = new Vector<CollisionDetector>();
 	}
+	
 	
 	/**
 	 * Add a collision detector on the CollisionManager
@@ -97,7 +99,7 @@ public class CollisionManager {
 	}
 	
 	/**
-	 * Calls every {@linkplain Sprite } in all CollisionDetector.
+	 * Calls every {@link com.tabuto.j2dgf.Sprite} in all CollisionDetector.
 	 * registered in this <code>CollisionManager</code>.
 	 */
 	public void RunCollisionManager()
@@ -106,6 +108,4 @@ public class CollisionManager {
 		for (int i=0; i<max;i++)
 			CollisionsList.get(i).checkCollision();
 	}
-	
-
 }

@@ -8,7 +8,11 @@
 package com.tabuto.test.j2dgf;
 
 import java.awt.Graphics;
+
+import com.tabuto.j2dgf.Group;
+import com.tabuto.j2dgf.Sprite;
 import com.tabuto.j2dgf.SpriteGroup;
+import com.tabuto.j2dgf.collision.CollisionAction;
 import com.tabuto.j2dgf.collision.CollisionBoundDetector;
 import com.tabuto.j2dgf.collision.CollisionDetector;
 import com.tabuto.j2dgf.gui.J2DCanvasPanel;
@@ -48,7 +52,8 @@ public class MyCanvas extends J2DCanvasPanel{
 	// Array of Particle
 	Particle[] pArray = new Particle[N_Particles + 1]; 
 	//ParticleGroup
-	SpriteGroup alfaGroup = new SpriteGroup("Alfa");
+	Group<Particle> alfaGroup = new Group<Particle>();
+	//Group<Particle> betaGroup= new Group<Particle>("Beta");
 	//Particle collision check collision between particles
 	ParticleCollision pCollision;
 	//CollisionBoundDetector check collision woth the boundary
@@ -60,6 +65,7 @@ public class MyCanvas extends J2DCanvasPanel{
 	//Override init stuff
 	public void initStuff()
 	{
+		alfaGroup.setGroupName("alfa");
 		//Init Particle Collision
 		pCollision = new ParticleCollision(alfaGroup);
 		pCollision.setDistance(0);
@@ -94,7 +100,7 @@ public class MyCanvas extends J2DCanvasPanel{
 		    pArray[i].setRadius(  (int)( 1+Math.random()*11 )); // Assegno un raggio casuale
 			pArray[i].setSpeed(80);
 		    //Add the new Particle in the ParticleGroup
-		    alfaGroup.AddSprite(pArray[i]);
+		    alfaGroup.add(pArray[i]);
 		}		
 		
     }
@@ -106,18 +112,18 @@ public class MyCanvas extends J2DCanvasPanel{
 	    	for(int i=0;i<N_Particles;i++)
 	          {
 	    		//Moving the sprite
-	    		alfaGroup.getSprite(i).move();
+	    		alfaGroup.get(i).move();
 	    		//CheckCollision
 	    		 cm.RunCollisionManager();
 	    		 //Draw the Sprites
-	    		alfaGroup.getSprite(i).drawMe(g);
+	    		alfaGroup.get(i).drawMe(g);
 	    	   
 	    	  }
 	    }
 	 
 	 public void deleteStuff()
 	 {
-		 alfaGroup.group.clear();
+		 alfaGroup.clear();
 		 
 	 }
 	 
@@ -125,25 +131,25 @@ public class MyCanvas extends J2DCanvasPanel{
 	//CollisionDetector: What does it do when a collision checked?
 	public class ParticleCollision extends CollisionDetector{
 
+		Particle p1,p2;
 		//Constructor
-		 public ParticleCollision(SpriteGroup sp1)
+		 public ParticleCollision(Group<Particle> sp1)
 		 {
 			 super(sp1);
 		 }
+		 
 		 //Override CollisionAction
-		 public void CollisionAction(int s1, int s2)
+		public void CollisionAction(int s1, int s2)
 		  {
 			//Cast to class extends Sprite 
-			Particle p1,p2;
-			p1 = (Particle) group1.getSpriteByHash(s1);
-			p2 = (Particle) group1.getSpriteByHash(s2);
 			
-			//TO-DO
+			p1 = (Particle) this.group1.get(s1); 
+			p2 = (Particle) this.group1.get(s2); 
 			
-			double temp= p2.getAngle();
+			double temp= this.group1.get(s1).getAngle();
 			
-			p2.setAngleRadians(p1.getAngle());
-			p1.setAngleRadians(temp);
+			this.group1.get(s1).setAngleRadians(group1.get(s2).getAngle());
+			this.group1.get(s2).setAngleRadians(temp);
 			
 			if (p1.getMass()>p2.getMass())
 				p2.setRadius( p1.getRadius());
@@ -156,7 +162,6 @@ public class MyCanvas extends J2DCanvasPanel{
 			
 		 
 	}
-	
 }
 
 

@@ -2,7 +2,7 @@
 * @author Francesco di Dio
 * Date: 05 Novembre 2010 18.14
 * Titolo: J2DControlPanel.java
-* Versione: 0.5.0 Rev.:
+* Versione: 0.6.0 Rev.:
 */
 
 /*
@@ -57,11 +57,11 @@ import javax.swing.JPanel;
  * }
  * </pre>
  * 
- * @see CollisionDetector
+ * @see com.tabuto.j2dgf.collision.CollisionDetector
  * 
  * @author tabuto83
  *
- * @version 0.5.0
+ * @version 0.6.0
  */
 public abstract class J2DControlPanel extends JPanel{
 	/**

@@ -41,7 +41,9 @@ import java.util.Vector;
  * 
  * @author tabuto83
  * 
- * @version 0.4.0
+ * @version 0.5.0
+ * 
+ * @deprecated Use class {@link Group} instead
  */
 public class SpriteGroup {
 
@@ -52,17 +54,8 @@ public Vector<Sprite> group = new Vector<Sprite>();
 private String GroupName;
 private boolean ACTIVE; 
 
-/**
- * This Method return the Group's Name 
- * @return  GroupName String
- */
-public String getGroupName() {return GroupName;}
 
-/**
- * This Method set the Group's Name
- * @param s String
- */
-public void setGroupName(String s){GroupName=s;}
+
 
 /**
  * CONSTRUCTOR
@@ -78,6 +71,20 @@ public void setGroupName(String s){GroupName=s;}
 	 ACTIVE = true;
  }
 
+/**
+ * This Method return the Group's Name 
+ * @return  GroupName String
+ */
+public String getGroupName() {return GroupName;}
+
+/**
+ * This Method set the Group's Name
+ * @param s String
+ */
+public void setGroupName(String s){GroupName=s;}
+
+
+
  /**
   * This method add an element in the group Vector
   * @param  s {@link Sprite}
@@ -87,6 +94,8 @@ public void setGroupName(String s){GroupName=s;}
  {
 	 group.add(s);
  }
+ 
+ 
  /**
   * Remove a Sprite from the Group Vector
   * @param p {@link Sprite}

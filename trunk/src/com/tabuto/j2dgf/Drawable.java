@@ -2,7 +2,7 @@
 * @author Francesco di Dio
 * Date: 05 Novembre 2010 18.14
 * Titolo: Drawable.java
-* Versione: 0.5 Rev.a:
+* Versione: 0.6 Rev.a:
 */
 
 
@@ -17,7 +17,7 @@ import java.awt.Graphics2D;
  * 
  * @author tabuto83
  *
- * @version 0.4.0
+ * @version 0.6.0
  * 
  * @see Sprite
  */
@@ -44,10 +44,5 @@ public interface Drawable {
 	  */
 	 public void Deactivate();
 	 
-	 /**
-	  * Override this method in order to return a unique ID number to identify your drawable object
-	  * @return int ID number
-	  */
-	 public int getId();
 
 }

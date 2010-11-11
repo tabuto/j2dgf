@@ -2,7 +2,7 @@
 * @author Francesco di Dio
 * Date: 05 Novembre 2010 18.14
 * Titolo: J2DCanvasPanel.java
-* Versione: 0.5.0 Rev.:
+* Versione: 0.6.0 Rev.:
 */
 
 
@@ -50,11 +50,11 @@ import com.tabuto.j2dgf.collision.CollisionManager;
  * This Class implements a CavasPanel where the sprite "live". <br>
  * This Class should be had a CollisionDetector inner classes;
  * 
- * @see CollisionDetector
+ * @see com.tabuto.j2dgf.collision.CollisionDetector
  * 
  * @author tabuto83
  *
- * @version 0.5.0
+ * @version 0.6.0
  */
 
 public class J2DCanvasPanel extends JPanel implements Runnable {
@@ -66,7 +66,7 @@ public class J2DCanvasPanel extends JPanel implements Runnable {
 	/**
 	 * Sleep value for the thread. Default value: 10
 	 */
-	private int sleep=10;
+	protected int sleep=10;
 	 /**
 	  * Dimension DIM
 	  * Real Dimension of the canvasPanel
@@ -75,7 +75,7 @@ public class J2DCanvasPanel extends JPanel implements Runnable {
 	 
 	 protected boolean running = true;
 
-	 private Image BufferedImage;
+	 protected Image BufferedImage;
 	 
 	 
 	 private boolean PLAY=true;
@@ -115,15 +115,16 @@ public class J2DCanvasPanel extends JPanel implements Runnable {
 			cm = new CollisionManager();
 			//setAutoscrolls(true);
 	        setDoubleBuffered(true);
+	        //this.BufferedImage = createImage(DIM.width,DIM.height );
 	        
 		}
 	 
 	 /**
 	  * This <code>abstract</code> method initialize the component of the game:
 	  * <ul>
-	  *  <li> {@link SpriteGroup}
-	  *  <li> {@link CollisionDetector} 
-	  *  <li> {@link CollisionBoundDetector} (if needs!)
+	  *  <li> {@link com.tabuto.j2dgf.Group}
+	  *  <li> {@link com.tabuto.j2dgf.collision.CollisionDetector} 
+	  *  <li> {@link com.tabuto.j2dgf.collision.CollisionBoundDetector} (if needs!)
 	  *  </ul>
 	  *  N.B. The {@link CollisionManager} has been initialize in the Costructor method.
 	  */
@@ -149,7 +150,7 @@ public class J2DCanvasPanel extends JPanel implements Runnable {
 	 
 	 /**
 	  * Set the panel's BufferStrategy 
-	  * @param BufferStrategy {@link BufferStrategy}
+	  * @param b {@link BufferStrategy}
 	  */
 	 public void setBufferStrategy(BufferStrategy b){bs=b;}
 	 
@@ -201,7 +202,7 @@ public class J2DCanvasPanel extends JPanel implements Runnable {
 	    {
 	            try
 	            { 
-	            	BufferedImage = createImage(DIM.width, DIM.height);
+	            	this.BufferedImage = createImage(DIM.width, DIM.height);
 	            	Graphics buffer =  BufferedImage.getGraphics();
 	            	buffer.setColor(background);
 	            	buffer.fillRect(0, 0, DIM.width, DIM.height);      
@@ -209,6 +210,7 @@ public class J2DCanvasPanel extends JPanel implements Runnable {
 	            }//end try
 	            catch (Exception e)
 	            {
+	            	System.out.println("Error at J2DCanvasPanel (213) "+e.getMessage());
 	                System.exit(2);
 	            }
 	       
@@ -265,7 +267,7 @@ public class J2DCanvasPanel extends JPanel implements Runnable {
 	    {
 		  
 	      while(PLAY) {
-	    	drawStuff();   // render to a buffer
+	    	this.drawStuff();   // render to a buffer
 	       panelDraw();  // draw buffer to screen
 	        try {
 	          Thread.sleep(sleep);  // sleep a bit

@@ -1,8 +1,8 @@
 /**
 * @author Francesco di Dio
-* Date: 15 Ottobre 2010 20.36
+* Date: 10 Novembre 2010 20.36
 * Titolo: Point.java
-* Versione: 0.2 Rev.:1
+* Versione: 0.2.1 Rev.:1
 */
 
 
@@ -61,7 +61,7 @@ package com.tabuto.util;
  * 
  * @author tabuto83
  * 
- * @version 0.2.0
+ * @version 0.2.1
  * 
  * 
  */
@@ -274,7 +274,7 @@ public Vettore(double x, double y, boolean rif)
  * <br> he {@link #origin}  and {@link #end}  coordinates are setting by {@link Point}; 
  * The boolean parameter set the {@link Vettore#JRif} variable;
  * <p>
- * @param p {@link Point}
+ * @param o {@link Point}
  * @param rif boolean
  * 
  * @see Vettore#Vettore()
@@ -386,7 +386,7 @@ public Vettore(double x, double y, double d, double m, boolean rif)
  * Creates new <code>Vettore</code> setting m as new {@link #module}, d as new {@link #direction};
  * <br> The {@link #origin} coordinates are setting by {@link Point} 
  * <p>
- * @param p Point
+ * @param o Point
  * @param d double
  * @param m double
  * 
@@ -422,7 +422,7 @@ public Vettore(Point o, double d, double m)
  * <br> The {@link #origin} coordinates are setting by {@link Point} 
  * The boolean parameter set the {@link Vettore#JRif} variable;
  * <p>
- * @param p Point
+ * @param o Point
  * @param d double
  * @param m double
  * @param rif boolean
@@ -537,11 +537,11 @@ public Vettore (Point o, Point e, boolean rif)
 // Check the value of direction, and forces it to be between 0 and 2*PI
 protected void checkDirection()
 	{
-	  if (( this.origin.x > this.end.x  ) && (this.origin.y > this.end.y ) )
-			direction = direction + Math.PI;
+	   // if (( this.origin.x > this.end.x  ) && (this.origin.y > this.end.y ) )
+	   //		direction = direction + Math.PI;
 		
 		if (direction<0)
-			direction = direction + Math.PI;
+			direction = direction + 2*Math.PI;
 		
 		if (Math.toDegrees(direction)>360)
 			direction =  Math.toRadians(  Math.toDegrees(direction)  % 360 );
@@ -800,9 +800,9 @@ public double getDirectionDegrees()
  * {@link #module} and {@link #direction}
  * @param e Point
  * 
- * @see {@link Vettore#setNewEnd(double,double)}
- * @see {@link Vettore#setNewEndX(double)}
- * @see {@link Vettore#setNewEndY(double)}
+ * @see  Vettore#setNewEnd(double,double)
+ * @see Vettore#setNewEndX(double)
+ * @see  Vettore#setNewEndY(double)
  */
 
 public void setNewEnd(Point e)
@@ -819,9 +819,9 @@ public void setNewEnd(Point e)
  * @param x double
  * @param y double
  * 
- * @see {@link Vettore#setNewEnd(Point)}
- * @see {@link Vettore#setNewEndX(double)}
- * @see {@link Vettore#setNewEndY(double)}
+ * @see  Vettore#setNewEnd(Point)
+ * @see Vettore#setNewEndX(double)
+ * @see Vettore#setNewEndY(double)
  */
 public void setNewEnd(double x, double y)
 	{
@@ -836,9 +836,9 @@ public void setNewEnd(double x, double y)
  * Set the new {@link #end} X coordinate and calculate the new values of component [{@link #i}, {@link #j}], 
  * {@link #module} and {@link #direction}
  * @param x double
- * @see {@link Vettore#setNewEnd(double, double)}
- * @see {@link Vettore#setNewEnd(Point)}
- * @see {@link Vettore#setNewEndY(double)}
+ * @see Vettore#setNewEnd(double, double)
+ * @see Vettore#setNewEnd(Point)
+ * @see  Vettore#setNewEndY(double)
  */
 public void setNewEndX(double x)
 	{
@@ -857,9 +857,9 @@ public void setNewEndX(double x)
  * Set the new {@link #end} Y coordinate and calculate the new values of component [{@link #i}, {@link #j}],
  * {@link #module} and {@link #direction}
  * @param y double
- * @see {@link Vettore#setNewEnd(double, double)}
- * @see {@link Vettore#setNewEnd(Point)}
- * @see {@link Vettore#setNewEndX(double)}
+ * @see Vettore#setNewEnd(double, double)
+ * @see Vettore#setNewEnd(Point)
+ * @see Vettore#setNewEndX(double)
  * 
  */
 
