@@ -2,7 +2,7 @@
 * @author Francesco di Dio
 * Date: 11 Ottobre 2010 20.36
 * Titolo: Point.java
-* Versione: 0.1.1 Rev.:1
+* Versione: 0.1.2 Rev.:1
 */
 
 
@@ -44,7 +44,7 @@ import java.io.Serializable;
  * 
  * @author tabuto83
  * 
- * @version 0.1.1
+ * @version 0.1.2
  * 
  * 
  */

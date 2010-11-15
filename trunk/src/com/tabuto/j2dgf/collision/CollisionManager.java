@@ -2,7 +2,7 @@
 * @author Francesco di Dio
 * Date: 05 Novembre 2010
 * Titolo: CollisionManager.java
-* Versione: 0.6 Rev.:
+* Versione: 0.6.1 Rev.:
 */
 
 /*
@@ -33,6 +33,7 @@
 
 package com.tabuto.j2dgf.collision;
 
+import java.io.Serializable;
 import java.util.Vector;
 
 /**
@@ -45,12 +46,12 @@ import java.util.Vector;
  *
  * @author tabuto83
  * 
- * @version 0.6.0
+ * @version 0.6.1
  * 
  * @see Vector
  */
 
-public class CollisionManager {
+public class CollisionManager implements Serializable {
 	
 	/**
 	 * The collisionDetector Vector

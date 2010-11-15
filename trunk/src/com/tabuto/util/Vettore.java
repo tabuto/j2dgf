@@ -2,11 +2,13 @@
 * @author Francesco di Dio
 * Date: 10 Novembre 2010 20.36
 * Titolo: Point.java
-* Versione: 0.2.1 Rev.:1
+* Versione: 0.2.2 Rev.:1
 */
 
 
 package com.tabuto.util;
+
+import java.io.Serializable;
 
 /*
  * Copyright (c) 2010 Francesco di Dio.
@@ -61,11 +63,11 @@ package com.tabuto.util;
  * 
  * @author tabuto83
  * 
- * @version 0.2.1
+ * @version 0.2.2
  * 
  * 
  */
-public class Vettore {
+public class Vettore implements Serializable{
 	
 	/**
 	 * Origin {@link Point} of the vector

@@ -75,7 +75,7 @@ public class J2DCanvasPanel extends JPanel implements Runnable {
 	 
 	 protected boolean running = true;
 
-	 protected Image BufferedImage;
+	 protected transient Image BufferedImage;
 	 
 	 
 	 private boolean PLAY=true;
@@ -87,7 +87,7 @@ public class J2DCanvasPanel extends JPanel implements Runnable {
 	 /**
 	  * A BufferStrategy to implements ActiveRendering and DoubleBuffer
 	  */
-	 protected BufferStrategy bs;      
+	 protected transient BufferStrategy bs;      
 	 
 	 /**
 	  * A CollisionManager declaration to manage CollisionDetector
