@@ -1,5 +1,8 @@
 Changelog
 
+J2DGF v.0.6.1
+*ALL: all class now implements Serializable interface to save Game objects
+
 J2DGF v.0.6
 * CollisionBoundDetector: fix a  Collision Bound Bug!
 * ALL: Use enum type when possible

@@ -2,7 +2,7 @@
 * @author Francesco di Dio
 * Date: 09 Novembre 2010 18.14
 * Titolo: Sprite.java
-* Versione: 0.6 Rev.9:
+* Versione: 0.6.1 Rev.9:
 */
 
 
@@ -34,6 +34,8 @@ package com.tabuto.j2dgf;
 
 import java.awt.Dimension;
 import java.awt.Graphics;
+import java.io.Serializable;
+
 import com.tabuto.util.Point;
 import com.tabuto.util.Vettore;
 
@@ -53,13 +55,13 @@ import com.tabuto.util.Vettore;
  * 
  * @author tabuto83
  * 
- * @version 0.6.0
+ * @version 0.6.1
  * 
  * @see Group
  * 
  */
 
-public abstract class Sprite implements Drawable {
+public abstract class Sprite implements Drawable, Serializable {
 
 	/**
 	 * {@link Vettore} vector represent position, direction and speed of each sprite

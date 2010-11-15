@@ -2,7 +2,7 @@
 * @author Francesco di Dio
 * Date: 08/nov/2010 21.41.16
 * Titolo: Group.java
-* Versione: 0.6 Rev.a:
+* Versione: 0.6.1 Rev.a:
 */
 
 
@@ -31,7 +31,10 @@
 package com.tabuto.j2dgf;
 
 import java.awt.Graphics;
+import java.io.Serializable;
 import java.util.Vector;
+
+import com.tabuto.util.Point;
 
 /**
 * Group is a variable size contiguous indexable array of {@code Sprite}. The size of
@@ -45,10 +48,10 @@ import java.util.Vector;
 * 
 * @author tabuto83
 * 
-* @version 0.6.0
+* @version 0.6.1
 */
 
-public class Group<E extends Sprite> extends Vector<E> {
+public class Group<E extends Sprite> extends Vector<E> implements Serializable {
 
 	/**
 	 * 
@@ -208,6 +211,29 @@ public synchronized E getSpriteByHash(int hash)
 	            		return (E) elementData[i];
 	            }
 	        throw new IndexOutOfBoundsException();
+}
+
+/**
+ * Return a sprite if its distance from Point(x,y) is minus than tolerance
+ * @param x The x coordinate point in which search the sprite
+ * @param y The y coordinate point in which search the sprite
+ * @param tolerance
+ * @return Object
+ */
+public synchronized E getSpriteByPos(int x, int y, int tolerance)
+{
+	 int find=-1;
+	 Point click = new Point(x,y);
+	 for(int i=0;i<this.size();i++)
+     {	
+		 if( this.get(i).getPosition().getDistance(click) < tolerance )
+			 {find=i;break;}
+     }
+	 
+	 if(find>0)
+		 return this.get(find);
+	 else
+		 return null;
 }
 
 /**

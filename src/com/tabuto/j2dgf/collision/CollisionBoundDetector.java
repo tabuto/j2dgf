@@ -2,12 +2,13 @@
 * @author Francesco di Dio
 * Date: 09 Novembre 2010 
 * Titolo: CollisionBoundDetector.java
-* Versione: 0.6 Rev.:
+* Versione: 0.6.1 Rev.:
 */
 
 package com.tabuto.j2dgf.collision;
 
 import java.awt.Dimension;
+import java.io.Serializable;
 
 import com.tabuto.j2dgf.Group;
 import com.tabuto.j2dgf.Sprite;
@@ -56,13 +57,13 @@ import com.tabuto.j2dgf.Sprite;
  * 
  * @author tabuto83
  * 
- * @version 0.6.0
+ * @version 0.6.1
  * 
  * @see CollisionManager
  * @see CollisionDetector
  * 
  */
-public class CollisionBoundDetector extends CollisionDetector {
+public class CollisionBoundDetector extends CollisionDetector implements Serializable {
 
 	/**
 	 * Dimension of the playfield
