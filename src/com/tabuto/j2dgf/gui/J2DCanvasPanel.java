@@ -2,7 +2,7 @@
 * @author Francesco di Dio
 * Date: 05 Novembre 2010 18.14
 * Titolo: J2DCanvasPanel.java
-* Versione: 0.6.0 Rev.:
+* Versione: 0.6.2 Rev.:
 */
 
 
@@ -37,7 +37,6 @@ package com.tabuto.j2dgf.gui;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Graphics;
-import java.awt.Graphics2D;
 import java.awt.Image;
 import java.awt.Toolkit;
 import java.awt.image.BufferStrategy;
@@ -80,7 +79,8 @@ public class J2DCanvasPanel extends JPanel implements Runnable {
 	 
 	 private boolean PLAY=true;
 	
-	 private boolean STOP=false;
+	 @SuppressWarnings("unused")
+	private boolean STOP=false;
 	 
 	 
 	 

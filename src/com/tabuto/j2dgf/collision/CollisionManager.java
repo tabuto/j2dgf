@@ -2,7 +2,7 @@
 * @author Francesco di Dio
 * Date: 05 Novembre 2010
 * Titolo: CollisionManager.java
-* Versione: 0.6.1 Rev.:
+* Versione: 0.6.2 Rev.:
 */
 
 /*
@@ -53,6 +53,10 @@ import java.util.Vector;
 
 public class CollisionManager implements Serializable {
 	
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 6235330134986494263L;
 	/**
 	 * The collisionDetector Vector
 	 */

@@ -2,7 +2,7 @@
 * @author Francesco di Dio
 * Date: 05 Novembre 2010 18.14
 * Titolo: J2DControlPanel.java
-* Versione: 0.6.0 Rev.:
+* Versione: 0.6.2 Rev.:
 */
 
 /*
@@ -61,7 +61,7 @@ import javax.swing.JPanel;
  * 
  * @author tabuto83
  *
- * @version 0.6.0
+ * @version 0.6.2
  */
 public abstract class J2DControlPanel extends JPanel{
 	/**
