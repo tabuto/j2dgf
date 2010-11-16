@@ -2,7 +2,7 @@
 * @author Francesco di Dio
 * Date: 09 Novembre 2010 18.14
 * Titolo: Sprite.java
-* Versione: 0.6.1 Rev.9:
+* Versione: 0.6.2 Rev.9:
 */
 
 
@@ -55,13 +55,21 @@ import com.tabuto.util.Vettore;
  * 
  * @author tabuto83
  * 
- * @version 0.6.1
+ * @version 0.6.2
  * 
  * @see Group
  * 
  */
 
 public abstract class Sprite implements Drawable, Serializable {
+
+
+
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -7863896797028459096L;
+
 
 	/**
 	 * {@link Vettore} vector represent position, direction and speed of each sprite

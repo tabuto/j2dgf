@@ -2,7 +2,7 @@
 * @author Francesco di Dio
 * Date: 08/nov/2010 21.41.16
 * Titolo: Group.java
-* Versione: 0.6.1 Rev.a:
+* Versione: 0.6.2 Rev.a:
 */
 
 
@@ -48,15 +48,16 @@ import com.tabuto.util.Point;
 * 
 * @author tabuto83
 * 
-* @version 0.6.1
+* @version 0.6.2
 */
 
 public class Group<E extends Sprite> extends Vector<E> implements Serializable {
 
+
 	/**
-	 * 
+	 * Not use
 	 */
-	private static final long serialVersionUID = 2075695098828857052L;
+	//private static final long serialVersionUID = 2075695098828857052L;
 
 	/**
 	 * Name of the group
