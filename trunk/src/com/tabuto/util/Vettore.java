@@ -69,6 +69,12 @@ import java.io.Serializable;
  */
 public class Vettore implements Serializable{
 	
+
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -5928225620606541488L;
+
 	/**
 	 * Origin {@link Point} of the vector
 	 */
@@ -129,7 +135,7 @@ public class Vettore implements Serializable{
 	 * @see Vettore#setPrecision(double)
 	 * @see Vettore#getPrecision()
 	 */
-	private static double eps = 0.00001;
+	private double eps = 0.00001;
 
 /*
 * **************************************************************

@@ -2,7 +2,7 @@
 * @author Francesco di Dio
 * Date: 11 Ottobre 2010 20.36
 * Titolo: Point.java
-* Versione: 0.1.2 Rev.:1
+* Versione: 0.2.2 Rev.:1
 */
 
 
@@ -44,7 +44,7 @@ import java.io.Serializable;
  * 
  * @author tabuto83
  * 
- * @version 0.1.2
+ * @version 0.2.2
  * 
  * 
  */
@@ -55,6 +55,7 @@ public class Point implements Serializable {
 	 * 
 	 */
 	private static final long serialVersionUID = -1532905975817848364L;
+
 	/**
 	 * Point's x coordinate
 	 */

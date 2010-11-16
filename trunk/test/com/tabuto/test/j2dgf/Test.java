@@ -1,7 +1,5 @@
 package com.tabuto.test.j2dgf;
 
-import java.util.Properties;
-
 import javax.swing.JOptionPane;
 
 import com.tabuto.util.MyUtils;

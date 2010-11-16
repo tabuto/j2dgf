@@ -2,7 +2,7 @@
 * @author Francesco di Dio
 * Date: 05 Novembre 2010 18.14
 * Titolo: J2DBottomPanel.java
-* Versione: 0.6.0 Rev.:
+* Versione: 0.6.2 Rev.:
 */
 
 /*

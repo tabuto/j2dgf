@@ -30,7 +30,11 @@
 
 package com.tabuto.j2dgf.collision;
 
-
+/**
+ * Class Not yet used
+ * @author user
+ *
+ */
 public class CollisionAction {
 
 	public  void action(){};

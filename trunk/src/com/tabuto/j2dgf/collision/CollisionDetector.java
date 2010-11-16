@@ -2,7 +2,7 @@
 * @author Francesco di Dio
 * Date: 05 Novembre 2010 
 * Titolo: CollisionDetector.java
-* Versione: 0.6.1 Rev.:
+* Versione: 0.6.2 Rev.:
 */
 
 package com.tabuto.j2dgf.collision;
@@ -51,7 +51,7 @@ import com.tabuto.j2dgf.Sprite;
  * 
  * @author tabuto83
  * 
- * @version 0.6.1
+ * @version 0.6.2
  * 
  * 
  * @see CollisionManager
@@ -59,6 +59,11 @@ import com.tabuto.j2dgf.Sprite;
  */
 
 public class CollisionDetector implements Serializable {
+
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -2577969994903303062L;
 
 	/** Boolean variable. Is true if the collisionDetector checks two {@link Group}*/
 	protected boolean twoGroups;

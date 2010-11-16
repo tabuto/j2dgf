@@ -2,7 +2,7 @@
 * @author Francesco di Dio
 * Date: 05 Novembre 2010 18.14
 * Titolo: GameWindow.java
-* Versione: 0.5.0 Rev.:
+* Versione: 0.5.1 Rev.:
 */
 
 package com.tabuto.test.j2dgf;
@@ -32,7 +32,7 @@ public class GameWindow extends JFrame {
 	BufferStrategy bs;      //BufferStrategy
     int W=1024,H=668;       //Window Frame Size
     Dimension d;            //Dimension of window size
-    private static final String version =" v.0.5.0";
+    private static final String version =" v.0.5.1";
     boolean PLAY = true;
     boolean STOP = false;
     
@@ -179,7 +179,9 @@ public class GameWindow extends JFrame {
       	      public void actionPerformed( ActionEvent action )
       	      								{
       	    	  		JOptionPane.showMessageDialog(null, 
-      	    	  				"JUniverse "+ version+" is written by tabuto83", 
+      	    	  				"JUniverse "+ version+" is written by tabuto83" 
+      	    	  				+"\n Using J2DGF v.0.6.2"
+      	    	  				+"\nGet more information at: http://code.google.com/p/j2dgf/", 
       	    	  				"About", 
       	    	  				JOptionPane.PLAIN_MESSAGE);
       	      								}
