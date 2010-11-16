@@ -2,14 +2,13 @@
 * @author Francesco di Dio
 * Date: 05 Novembre 2010 18.14
 * Titolo: Drawable.java
-* Versione: 0.6.1 Rev.a:
+* Versione: 0.6.2 Rev.a:
 */
 
 
 package com.tabuto.j2dgf;
 
 import java.awt.Graphics;
-import java.awt.Graphics2D;
 
 
 /**
@@ -17,7 +16,7 @@ import java.awt.Graphics2D;
  * 
  * @author tabuto83
  *
- * @version 0.6.1
+ * @version 0.6.2
  * 
  * @see Sprite
  */
