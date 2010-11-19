@@ -58,6 +58,7 @@ public class GameWindow extends JFrame {
         setTitle("J2DFrame" + version);
         setSize(d.width,d.height);
         setResizable(true);
+@SuppressWarnings("unused")
     	BufferStrategy bs;
 		createBufferStrategy(1);
 		bs = getBufferStrategy();

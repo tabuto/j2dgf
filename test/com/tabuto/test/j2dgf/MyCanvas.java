@@ -10,9 +10,6 @@ package com.tabuto.test.j2dgf;
 import java.awt.Graphics;
 
 import com.tabuto.j2dgf.Group;
-import com.tabuto.j2dgf.Sprite;
-import com.tabuto.j2dgf.SpriteGroup;
-import com.tabuto.j2dgf.collision.CollisionAction;
 import com.tabuto.j2dgf.collision.CollisionBoundDetector;
 import com.tabuto.j2dgf.collision.CollisionDetector;
 import com.tabuto.j2dgf.gui.J2DCanvasPanel;
@@ -129,6 +126,7 @@ public class MyCanvas extends J2DCanvasPanel{
 	 
 	 
 	//CollisionDetector: What does it do when a collision checked?
+@SuppressWarnings("serial")
 	public class ParticleCollision extends CollisionDetector{
 
 		Particle p1,p2;

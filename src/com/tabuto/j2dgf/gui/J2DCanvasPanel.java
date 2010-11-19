@@ -1,8 +1,8 @@
 /**
 * @author Francesco di Dio
-* Date: 05 Novembre 2010 18.14
+* Date: 19 Novembre 2010 18.14
 * Titolo: J2DCanvasPanel.java
-* Versione: 0.6.2 Rev.:
+* Versione: 0.6.3 Rev.:
 */
 
 
@@ -53,7 +53,7 @@ import com.tabuto.j2dgf.collision.CollisionManager;
  * 
  * @author tabuto83
  *
- * @version 0.6.0
+ * @version 0.6.3
  */
 
 public class J2DCanvasPanel extends JPanel implements Runnable {
@@ -146,6 +146,7 @@ public class J2DCanvasPanel extends JPanel implements Runnable {
 	  * Return the panel's BufferStrategy
 	  * @return bs
 	  */
+	 @SuppressWarnings("all")
 	 public BufferStrategy getBufferStrategy(){return bs;}
 	 
 	 /**
@@ -210,8 +211,10 @@ public class J2DCanvasPanel extends JPanel implements Runnable {
 	            }//end try
 	            catch (Exception e)
 	            {
-	            	System.out.println("Error at J2DCanvasPanel (213) "+e.getMessage());
-	                System.exit(2);
+	            	System.out.println("Error at J2DCanvasPanel (213) ");
+	            	e.getStackTrace();
+	            	e.printStackTrace();
+	                //System.exit(2);
 	            }
 	       
 		}   //end of DrawStuff

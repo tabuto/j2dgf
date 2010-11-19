@@ -1,8 +1,8 @@
 /**
 * @author Francesco di Dio
-* Date: 09 Novembre 2010 18.14
+* Date: 19 Novembre 2010 18.14
 * Titolo: Sprite.java
-* Versione: 0.6.2 Rev.9:
+* Versione: 0.6.3 Rev.9:
 */
 
 
@@ -55,7 +55,7 @@ import com.tabuto.util.Vettore;
  * 
  * @author tabuto83
  * 
- * @version 0.6.2
+ * @version 0.6.3
  * 
  * @see Group
  * 
@@ -185,6 +185,11 @@ public abstract class Sprite implements Drawable, Serializable {
 	   * @return Angle an angle express in Radians
 	   */
 	  public double getAngle(){return vector.getDirectionRadians();}
+	  
+	  /**
+	   * @return the {@link Dimension} of playfiled where Sprite lives on
+	   */
+	  public Dimension getDimension(){return d;}
 	  
 	  /**
 	   * Return the pixel's number on the right of the Sprite's center; 

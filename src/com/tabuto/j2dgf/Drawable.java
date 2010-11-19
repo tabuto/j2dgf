@@ -1,8 +1,8 @@
 /**
 * @author Francesco di Dio
-* Date: 05 Novembre 2010 18.14
+* Date: 19 Novembre 2010 18.14
 * Titolo: Drawable.java
-* Versione: 0.6.2 Rev.a:
+* Versione: 0.6.3 Rev.a:
 */
 
 
@@ -16,7 +16,7 @@ import java.awt.Graphics;
  * 
  * @author tabuto83
  *
- * @version 0.6.2
+ * @version 0.6.3
  * 
  * @see Sprite
  */

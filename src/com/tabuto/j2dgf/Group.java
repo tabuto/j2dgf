@@ -1,8 +1,8 @@
 /**
 * @author Francesco di Dio
-* Date: 08/nov/2010 21.41.16
+* Date: 19/nov/2010 21.41.16
 * Titolo: Group.java
-* Versione: 0.6.2 Rev.a:
+* Versione: 0.6.3 Rev.a:
 */
 
 
@@ -48,8 +48,9 @@ import com.tabuto.util.Point;
 * 
 * @author tabuto83
 * 
-* @version 0.6.2
+* @version 0.6.3
 */
+
 
 public class Group<E extends Sprite> extends Vector<E> implements Serializable {
 
@@ -205,6 +206,7 @@ public String getGroupName() {return GroupName;}
  * @see Object#hashCode()
  */
 
+@SuppressWarnings("unchecked")
 public synchronized E getSpriteByHash(int hash) 
 {
 	            for(int i=0;i<this.size();i++)
@@ -255,6 +257,7 @@ private void growByOne() {
           elementData = newData;
       }
   
+@SuppressWarnings("unused")
 private void growBy(int required) {
            int adding = 0;
        if (capacityIncrement <= 0) {

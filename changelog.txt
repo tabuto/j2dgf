@@ -1,5 +1,12 @@
 Changelog
 
+J2DGF v.0.6.3
+* Sprite class:add getDimension() method
+* Group class: remove Annotation SuppressWaring Serial
+* COllisionBound Class: add todo annotation
+* J2DCanvasPanel: fix the print of stackTrace in catch exception!
+* test package: add Annotation SupppressWarings
+
 J2DGF v.0.6.2
 * Group class is now serializable deleting the SerialVersion ID;
 * /test/Gamewindow class get more information in 'About' menù; 

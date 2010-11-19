@@ -34,8 +34,11 @@ import com.tabuto.j2dgf.Sprite;
 //This class in an example how to extends Sprite class
 
 public class Particle extends Sprite{
-	
-    
+
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -6361345090908913365L;
 	Color c = new Color(35,35,255);
 	private int radius;
 	public int mass;
