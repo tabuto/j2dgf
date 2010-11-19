@@ -1,8 +1,8 @@
 /**
 * @author Francesco di Dio
-* Date: 09 Novembre 2010 
+* Date: 19 Novembre 2010 
 * Titolo: CollisionBoundDetector.java
-* Versione: 0.6.2 Rev.:
+* Versione: 0.6.3 Rev.:
 */
 
 package com.tabuto.j2dgf.collision;
@@ -57,7 +57,7 @@ import com.tabuto.j2dgf.Sprite;
  * 
  * @author tabuto83
  * 
- * @version 0.6.2
+ * @version 0.6.3
  * 
  * @see CollisionManager
  * @see CollisionDetector
@@ -70,6 +70,10 @@ public class CollisionBoundDetector extends CollisionDetector implements Seriali
 	 * 
 	 */
 	private static final long serialVersionUID = 6755271373855764312L;
+	/**
+	 * 
+	 */
+	//private static final long serialVersionUID = 6755271373855764312L;
 	/**
 	 * Dimension of the playfield
 	 */
@@ -143,6 +147,7 @@ private CollisionsBoundType collisionType = CollisionsBoundType.NULL;
 		
 	}
 	
+	//@SuppressWarnings("unchecked")
 	public void CollisionAction(Group g1,int i,int j){};
 	
 	public void CollisionAction(int hash1,int hash2){};
@@ -196,7 +201,7 @@ private CollisionsBoundType collisionType = CollisionsBoundType.NULL;
 	 */
 	protected void Through(Sprite s)
 	{  
-	
+		//TODO Fix This Method
 	if ( s.getX() < 0  ) s.setX(this.dim.width - s.getWest());
 	if ( s.getX()  > this.dim.width  ) s.setX( 0 + s.getEast());
 	if ( s.getY() < 0  ) s.setY(this.dim.height - s.getSouth() );
@@ -204,13 +209,13 @@ private CollisionsBoundType collisionType = CollisionsBoundType.NULL;
 	  
 	}
 	
-	//TODO: A collision that simulate a bounce
+
 	/**
 	 * NOT YET IMPLEMENTED
 	 */
 	public void Bounce(Sprite s)
 	{
-	  	  
+		//TODO: Implements Bounce Collision
 	}
 	/**
 	 * Set true the flag {@link #Reflection} in order to use the method {@link #Reflection(Sprite)}

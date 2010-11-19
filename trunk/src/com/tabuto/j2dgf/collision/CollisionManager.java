@@ -1,8 +1,8 @@
 /**
 * @author Francesco di Dio
-* Date: 05 Novembre 2010
+* Date: 19 Novembre 2010
 * Titolo: CollisionManager.java
-* Versione: 0.6.2 Rev.:
+* Versione: 0.6.3 Rev.:
 */
 
 /*
@@ -46,7 +46,7 @@ import java.util.Vector;
  *
  * @author tabuto83
  * 
- * @version 0.6.1
+ * @version 0.6.3
  * 
  * @see Vector
  */

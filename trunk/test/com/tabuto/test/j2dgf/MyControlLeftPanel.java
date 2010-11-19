@@ -1,6 +1,5 @@
 package com.tabuto.test.j2dgf;
 
-import java.awt.BorderLayout;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
 

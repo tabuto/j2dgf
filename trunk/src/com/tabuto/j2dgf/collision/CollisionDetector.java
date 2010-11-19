@@ -1,8 +1,8 @@
 /**
 * @author Francesco di Dio
-* Date: 05 Novembre 2010 
+* Date: 19 Novembre 2010 
 * Titolo: CollisionDetector.java
-* Versione: 0.6.2 Rev.:
+* Versione: 0.6.3 Rev.:
 */
 
 package com.tabuto.j2dgf.collision;
@@ -51,13 +51,14 @@ import com.tabuto.j2dgf.Sprite;
  * 
  * @author tabuto83
  * 
- * @version 0.6.2
+ * @version 0.6.3
  * 
  * 
  * @see CollisionManager
  * @see CollisionBoundDetector
  */
 
+//@SuppressWarnings("unchecked")
 public class CollisionDetector implements Serializable {
 
 	/**

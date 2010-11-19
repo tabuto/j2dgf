@@ -1,9 +1,9 @@
 package com.tabuto.test.j2dgf;
 
-import java.awt.BorderLayout;
+
 import java.awt.Dimension;
 
-import javax.swing.JButton;
+
 import javax.swing.JLabel;
 
 import com.tabuto.j2dgf.gui.J2DBottomPanel;

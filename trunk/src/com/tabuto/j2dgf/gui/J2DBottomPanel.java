@@ -1,8 +1,8 @@
 /**
 * @author Francesco di Dio
-* Date: 05 Novembre 2010 18.14
+* Date: 19 Novembre 2010 18.14
 * Titolo: J2DBottomPanel.java
-* Versione: 0.6.2 Rev.:
+* Versione: 0.6.3 Rev.:
 */
 
 /*
@@ -62,7 +62,7 @@ import javax.swing.JPanel;
  * 
  * @author tabuto83
  *
- * @version 0.6.0
+ * @version 0.6.3
  */
 public abstract class J2DBottomPanel extends JPanel{
 	/**
