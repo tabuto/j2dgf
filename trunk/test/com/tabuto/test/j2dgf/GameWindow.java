@@ -2,7 +2,7 @@
 * @author Francesco di Dio
 * Date: 05 Novembre 2010 18.14
 * Titolo: GameWindow.java
-* Versione: 0.5.1 Rev.:
+* Versione: 0.5.2 Rev.:
 */
 
 package com.tabuto.test.j2dgf;
@@ -44,13 +44,16 @@ public class GameWindow extends JFrame {
     MyBottomPanel bottom;
     JScrollPane scroller;
   
+    //GAME
+    GameTest Game;
     
     public GameWindow()
     {
     	d = new Dimension(W,H);
     	cp_west = new MyControlLeftPanel(d);
     	cp_east = new MyControlRightPanel(d);
-    	panel = new MyCanvas(1024,1024); //Declare the DrawingPanel
+    	Game = new GameTest(d);
+    	panel = new MyCanvas(Game); //Declare the DrawingPanel
     	scroller = new JScrollPane(panel);
     	bottom = new MyBottomPanel(d);
     	j2dmenubar = new JMenuBar();
@@ -79,7 +82,7 @@ public class GameWindow extends JFrame {
     public void startNow()
     {
     	if(!STOP)
-        panel.initStuff();
+        Game.initGame();
 		
     	while(PLAY){ panel.run(); };   
     }
@@ -124,7 +127,7 @@ public class GameWindow extends JFrame {
         	start.addActionListener(new ActionListener()
 			{
     			public void actionPerformed( ActionEvent action )
-					{panel.Play();}
+					{Game.activate();}
 			});
         	actionmenu.add(start);
         		
@@ -148,7 +151,7 @@ public class GameWindow extends JFrame {
         	stop.addActionListener(new ActionListener()
 			{
     			public void actionPerformed( ActionEvent action )
-					{   panel.Stop(); }
+					{   Game.deactivate(); }
 			});
         	actionmenu.add(stop);
         	
@@ -161,8 +164,8 @@ public class GameWindow extends JFrame {
         									{
         	      public void actionPerformed( ActionEvent action )
         	      								{
-        										panel.deleteStuff();
-        										panel.initStuff();
+        										Game.deleteStuff();
+        										Game.initGame();
         	      								}
         									});
         	actionmenu.add(reset);
