@@ -1,8 +1,8 @@
 /**
 * @author Francesco di Dio
-* Date: 19 Novembre 2010 18.14
+* Date: 25 Novembre 2010 18.14
 * Titolo: Sprite.java
-* Versione: 0.6.3 Rev.9:
+* Versione: 0.6.5 Rev.9:
 */
 
 
@@ -35,6 +35,7 @@ package com.tabuto.j2dgf;
 import java.awt.Dimension;
 import java.awt.Graphics;
 import java.io.Serializable;
+import java.util.Observable;
 
 import com.tabuto.util.Point;
 import com.tabuto.util.Vettore;
@@ -55,13 +56,13 @@ import com.tabuto.util.Vettore;
  * 
  * @author tabuto83
  * 
- * @version 0.6.3
+ * @version 0.6.5
  * 
  * @see Group
  * 
  */
 
-public abstract class Sprite implements Drawable, Serializable {
+public abstract class Sprite extends Observable implements Drawable, Serializable {
 
 
 
@@ -137,6 +138,9 @@ public abstract class Sprite implements Drawable, Serializable {
      */
     protected int CollidedRadius;
     
+   
+    protected String Name="";
+    
     /**
      * 
      * 	Creates new <code>Sprite</code> in the playfiled of Dimension dim, with specific coordinates.
@@ -208,10 +212,15 @@ public abstract class Sprite implements Drawable, Serializable {
       */
      protected double getMySpeed()
      {
-   	  double speedy = this.speed * 0.021;
+   	  double speedy = this.speed * 0.030;
    	  return speedy;
      }
 
+     /**
+      * @return the Sprite String Name
+      */
+	public String getName(){return Name;}
+     
 	 /**
 	  * Return the pixel's number above the Sprite center; 
 	  * @return  {@link Sprite#NORTH}
@@ -487,6 +496,12 @@ public abstract class Sprite implements Drawable, Serializable {
     	  this.setCollisionRadius();
       }
 	  
+      /**
+       * Set the Name of the Sprite
+       * @param n String name of the Sprite
+       */
+  	public void setName(String n){Name = n;}
+      
 	  /**
 	   * Accept a int between 0 and 100 and set the sprite's speed
 	   * @param speed int Sprite's speed

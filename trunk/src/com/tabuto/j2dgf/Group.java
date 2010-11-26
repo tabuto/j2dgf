@@ -2,7 +2,7 @@
 * @author Francesco di Dio
 * Date: 19/nov/2010 21.41.16
 * Titolo: Group.java
-* Versione: 0.6.3 Rev.a:
+* Versione: 0.6.5 Rev.a:
 */
 
 
@@ -48,7 +48,7 @@ import com.tabuto.util.Point;
 * 
 * @author tabuto83
 * 
-* @version 0.6.3
+* @version 0.6.5
 */
 
 
@@ -190,7 +190,12 @@ public void deactiveAll()
 public void draw(Graphics g)
 {
 	for(int i=0;i<this.size();i++)
-		this.get(i).drawMe(g);
+	{ 	if(this.get(i).isActive())
+			this.get(i).drawMe(g);
+		else
+			{ remove(i); trimToSize();}
+		
+	}
 }
 
 /**
@@ -228,12 +233,12 @@ public synchronized E getSpriteByPos(int x, int y, int tolerance)
 	 int find=-1;
 	 Point click = new Point(x,y);
 	 for(int i=0;i<this.size();i++)
-     {	
+     {	double dist = this.get(i).getPosition().getDistance(click);
 		 if( this.get(i).getPosition().getDistance(click) < tolerance )
 			 {find=i;break;}
      }
 	 
-	 if(find>0)
+	 if(find>=0)
 		 return this.get(find);
 	 else
 		 return null;
@@ -296,7 +301,10 @@ private E[] newElementArray(int size)
 public void move()
 {
 	for(int i=0;i<this.size();i++)
-	this.get(i).move();
+	if(this.get(i).isActive()==true)
+		this.get(i).move();
+	else
+	{this.remove(i);trimToSize();}
 }
 
 /**
@@ -322,4 +330,21 @@ public void setDeactive(int i)
  * @param s String
  */
 public void setGroupName(String s){GroupName=s;}
+
+
+public synchronized E selectSprite(Point p, int tolerance)
+	{
+	 int find=-1;
+	for(int i=0;i<this.size();i++)
+		if ( this.get(i).getPosition().getDistance(p) < tolerance)
+			{find=i;break;}
+	
+	 if(find>0)
+		 return this.get(find);
+	 else
+		 return null;
+	
+	}
+
+
 }

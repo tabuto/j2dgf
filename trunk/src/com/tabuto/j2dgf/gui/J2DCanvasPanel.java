@@ -2,7 +2,7 @@
 * @author Francesco di Dio
 * Date: 19 Novembre 2010 18.14
 * Titolo: J2DCanvasPanel.java
-* Versione: 0.6.3 Rev.:
+* Versione: 0.6.5 Rev.:
 */
 
 
@@ -40,8 +40,19 @@ import java.awt.Graphics;
 import java.awt.Image;
 import java.awt.Toolkit;
 import java.awt.image.BufferStrategy;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
+import java.util.Observable;
+import java.util.Observer;
+
 import javax.swing.JPanel;
+
+import com.tabuto.j2dgf.Game2D;
 import com.tabuto.j2dgf.collision.CollisionManager;
+
 
 /**
  * Abstract class <code>J2DCanvasPanel</code> extends JPanel.
@@ -53,17 +64,18 @@ import com.tabuto.j2dgf.collision.CollisionManager;
  * 
  * @author tabuto83
  *
- * @version 0.6.3
+ * @version 0.6.5
  */
 
-public class J2DCanvasPanel extends JPanel implements Runnable {
+//TODO: Load and save Game are methods of J2DCanvasPanel
+public class J2DCanvasPanel extends JPanel implements Runnable, Observer {
 
 	/**
 	 * 
 	 */
 	private static final long serialVersionUID = 1L;
 	/**
-	 * Sleep value for the thread. Default value: 10
+	 * Sleep value for the thread. Default value: 10ms
 	 */
 	protected int sleep=10;
 	 /**
@@ -82,7 +94,7 @@ public class J2DCanvasPanel extends JPanel implements Runnable {
 	 @SuppressWarnings("unused")
 	private boolean STOP=false;
 	 
-	 
+	public Game2D Game;
 	 
 	 /**
 	  * A BufferStrategy to implements ActiveRendering and DoubleBuffer
@@ -119,6 +131,15 @@ public class J2DCanvasPanel extends JPanel implements Runnable {
 	        
 		}
 	 
+	 public J2DCanvasPanel(Game2D game)
+	 {
+		 DIM = game.getDimension();
+		 background = new Color(0,0,0); //Default value = BLACK
+		 setDoubleBuffered(true);
+		 Game=game;
+		 Game.addObserver(this);
+	 }
+	 
 	 /**
 	  * This <code>abstract</code> method initialize the component of the game:
 	  * <ul>
@@ -129,6 +150,8 @@ public class J2DCanvasPanel extends JPanel implements Runnable {
 	  *  N.B. The {@link CollisionManager} has been initialize in the Costructor method.
 	  */
 	 public void initStuff(){};
+	 
+	 
 	 
 	 /**
 	  * Set the Dimension (width and heigth) of the panel
@@ -207,7 +230,10 @@ public class J2DCanvasPanel extends JPanel implements Runnable {
 	            	Graphics buffer =  BufferedImage.getGraphics();
 	            	buffer.setColor(background);
 	            	buffer.fillRect(0, 0, DIM.width, DIM.height);      
-	            	drawSprite(buffer);          	
+	            	if(Game==null)
+	            		drawSprite(buffer);
+	            	else
+	            		Game.drawStuff(buffer);
 	            }//end try
 	            catch (Exception e)
 	            {
@@ -233,6 +259,7 @@ public class J2DCanvasPanel extends JPanel implements Runnable {
       *	  }
       *</pre>
 	  * @param g {@link Graphics}
+	  * @deprecated Use {@link Game2D#drawStuff(Graphics)}
 	  */
 	 protected void drawSprite(Graphics g){}
 	 
@@ -269,9 +296,10 @@ public class J2DCanvasPanel extends JPanel implements Runnable {
 	    /* Repeatedly update, render, sleep */
 	    {
 		  
-	      while(PLAY) {
-	    	this.drawStuff();   // render to a buffer
+	      while(Game.isActive()) {
+		   this.drawStuff();   // render to a buffer
 	       panelDraw();  // draw buffer to screen
+	
 	        try {
 	          Thread.sleep(sleep);  // sleep a bit
 	        }
@@ -299,6 +327,58 @@ public class J2DCanvasPanel extends JPanel implements Runnable {
 		
 		  
 	  }
+	  
+	  /**
+	   * Save a Game to a File
+	   * @param game Game2D to save
+	   * @param fileName File name of the Game2D saved
+	   */
+	public void saveGame(Game2D game, String fileName)
+		{
+		
+			FileOutputStream fos = null;
+		    ObjectOutputStream out = null;
+			 try
+			 {
+				 fos = new FileOutputStream(fileName);
+				 out = new ObjectOutputStream(fos);
+				 out.writeObject(game);
+				 out.close();
+				 game.setSaved(true);
+			 }
+			  catch(IOException ex)
+			  		{
+				  		ex.printStackTrace();
+					}
+		}
+
+	/**
+	 * Load a previously saved game stored in a file which PATH is path
+	 * @param path The path of the Game2D saved file
+	 */
+	public void loadGame(String path)
+	{
+		Game2D loaded = null;
+		FileInputStream fis = null;
+	    ObjectInputStream in = null;
+		try
+		 {
+		   fis = new FileInputStream(path);
+	       in = new ObjectInputStream(fis);
+		   loaded = (Game2D)in.readObject();
+	       in.close();
+	       if(loaded instanceof Game2D)
+	    	   this.Game = loaded;
+	     }
+	     catch(IOException ex)
+	     {
+		     ex.printStackTrace();
+	     }
+	     catch(ClassNotFoundException ex)
+	     {
+	     ex.printStackTrace();
+	     }
+	}
 	  
 	  //private void drawSprite(){Graphics2D g = (Graphics2D) this.getGraphics(); drawStuff(g);}
 	  /**
@@ -334,5 +414,11 @@ public class J2DCanvasPanel extends JPanel implements Runnable {
 		  this.drawStuff();   // render to a buffer
 	       this.panelDraw();  // draw buffer to screen
 	  }
+
+	@Override
+	public void update(Observable arg0, Object arg1) {
+		// TODO Auto-generated method stub
+		
+	}
 }
 

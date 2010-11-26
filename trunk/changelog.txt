@@ -1,4 +1,21 @@
 Changelog
+J2DGF v.0.6.5
+* Sprite implements Observable
+* CollisionDetector implements Observable and return to its Observer (CollisionMAnager) 
+a message with the Class name. So the Class ParticleCollision send a message to CollisionMAnager
+using a String="ParticleCollision"
+*CollisionManager now observe its CollisionDetector, and is observable by other sending the messages
+sends by its CollisionDetector.
+*CollisionMAnager is a Thread
+* New CLass GAME to wrap entire JD2GF components, the J2DCanvas simply instanciate new Game
+* J2DCanvasPanel is now simple a container of a Game class and his aim is just to draw the Game Sprites
+
+
+
+J2DGF v.0.6.4
+* CollisionAction can be Active or deactive
+* Sprite Speed Parameter value changed
+* Group add remove routine into move() method
 
 J2DGF v.0.6.3
 * Sprite class:add getDimension() method
