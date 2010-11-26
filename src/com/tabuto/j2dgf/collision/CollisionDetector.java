@@ -1,13 +1,14 @@
 /**
 * @author Francesco di Dio
-* Date: 19 Novembre 2010 
+* Date: 23 Novembre 2010 
 * Titolo: CollisionDetector.java
-* Versione: 0.6.3 Rev.:
+* Versione: 0.6.5 Rev.:
 */
 
 package com.tabuto.j2dgf.collision;
 
 import java.io.Serializable;
+import java.util.Observable;
 
 import com.tabuto.j2dgf.Group;
 import com.tabuto.j2dgf.Sprite;
@@ -48,10 +49,10 @@ import com.tabuto.j2dgf.Sprite;
  * <p>
  *  When a collision is checked, the class calls
  * a {@link #CollisionAction(int, int)}method for the collided sprites
- * 
+ * This class extends Observable class 'couse let its observer to know when
  * @author tabuto83
  * 
- * @version 0.6.3
+ * @version 0.6.5
  * 
  * 
  * @see CollisionManager
@@ -59,7 +60,7 @@ import com.tabuto.j2dgf.Sprite;
  */
 
 //@SuppressWarnings("unchecked")
-public class CollisionDetector implements Serializable {
+public class CollisionDetector extends Observable implements Serializable, Runnable {
 
 	/**
 	 * 
@@ -75,13 +76,15 @@ public class CollisionDetector implements Serializable {
 	/**Represent the DISTANCE when the CollisionDetector calls {@link #CollisionAction(int, int)} */
 	protected double DISTANCE;
 	
+	protected boolean ACTIVE;
+	
 	/** Set the DISTANCE variable @see {@link CollisionDetector#DISTANCE} */
 	public void setDistance(double d){if(DISTANCE>=0)DISTANCE = d;}
 	
 	/**Get the DISTANCE variable @see {@link CollisionDetector#DISTANCE} */
 	public double getDistance(){return DISTANCE;}
 	
-	
+	private String Name;
 	/**
 	 * CONSTRUCTOR
 	 * <p>
@@ -91,12 +94,15 @@ public class CollisionDetector implements Serializable {
 	 * @param  pg1 {@link Group}
 	 */
 	
+	
 	public CollisionDetector(Group<? extends Sprite> pg1)
 	{
 		group1 = pg1;
 		
 		twoGroups = false;
 		DISTANCE = 0;
+		ACTIVE=true;
+		setName();
 	}
 	
 	/**
@@ -112,7 +118,8 @@ public class CollisionDetector implements Serializable {
 		group2 = pg2;
 		twoGroups = true;
 		DISTANCE = 0;
-		
+		ACTIVE=true;
+		setName();
 	}
 	
 	
@@ -129,62 +136,126 @@ public class CollisionDetector implements Serializable {
 	
 	
 	/**
-	 * Check the sprite group in search of collisions. When a collision occurs it calls a CollisionAction method.
+	 * Check the sprite group in search of collisions. 
+	 * When a collision occurs it calls a CollisionAction method.
 	 */
 	public void checkCollision()
 	{
-		int count=1;
-		//Check if this class have to control one or two groups
-		if (twoGroups && group1.isActive() && group2.isActive() )
+		if(ACTIVE)
 		{
-			for(int i=0; i< group1.size(); i++ )
-				for (int j=0; j < group2.size();j++)
-				  if ( group1.get(i).isCollide(group2.get(j),DISTANCE ) )
-					  
-				     {
-					  CollisionAction( i,j);
-					  
-					  int defaultSpeed1 = group1.get(i).getSpeed();
-					  int defaultSpeed2 = group2.get(j).getSpeed();
-					  group1.get(i).setSpeed(1);
-					  group2.get(j).setSpeed(1);
-					  group1.get(i).move();
-					  group2.get(j).move();
-					  group1.get(i).setSpeed(defaultSpeed1);
-					  group2.get(j).setSpeed(defaultSpeed2);
-					  }
-					
-		}
-		else
-			if (group1.isActive())
-		{   
-			for (int i=0; i< group1.size();i++)
-				for (int j=count;j<group1.size();j++)
-				{
-					if (j!=i)
-					if ( 
-						group1.get(i).isCollide( group1.get(j),DISTANCE ) 
+			int count=1;
+			//Check if this class have to control one or two groups
+			if (twoGroups && group1.isActive() && group2.isActive() )
+			{
+				for(int i=0; i< group1.size(); i++ )
+					for (int j=0; j < group2.size();j++)
+					  if ( group1.get(i).isCollide(group2.get(j),DISTANCE ) )
+						  
+					     {
+						  	setChanged();
+							notifyObservers(getName());
+						  CollisionAction( i,j);
+						  
+						  int defaultSpeed1 = group1.get(i).getSpeed();
+						  int defaultSpeed2 = group2.get(j).getSpeed();
+						  group1.get(i).setSpeed(1);
+						  group2.get(j).setSpeed(1);
+						  group1.get(i).move();
+						  group2.get(j).move();
+						  group1.get(i).setSpeed(defaultSpeed1);
+						  group2.get(j).setSpeed(defaultSpeed2);
+						  }
+			}
+			else
+				if (group1.isActive())
+			{   
+				for (int i=0; i< group1.size();i++)
+					for (int j=count;j<group1.size();j++)
+					{
+						if (j!=i)
+						if ( 
+							group1.get(i).isCollide( group1.get(j),DISTANCE ) 
+								
+						    )
 							
-					    )
-						
-						
-					{  
-						if (group1.get(i).isActive() && group1.get(j).isActive() )
-						CollisionAction(i, j );
-						int defaultSpeed1 = group1.get(i).getSpeed();
-						int defaultSpeed2 = group1.get(j).getSpeed();
-						
-						group1.get(i).setSpeed(1);
-						group1.get(j).setSpeed(1);
-						group1.get(i).move();
-						group1.get(j).move();
-						group1.get(i).setSpeed(defaultSpeed1);
-						group1.get(j).setSpeed(defaultSpeed2);
-						count++;
+							
+						{  
+							if (group1.get(i).isActive() && group1.get(j).isActive() )
+							
+							setChanged();
+							notifyObservers(getName());
+							CollisionAction(i, j );
+							
+							int defaultSpeed1 = group1.get(i).getSpeed();
+							int defaultSpeed2 = group1.get(j).getSpeed();
+							
+							 group1.get(i).setSpeed(1);
+							 group1.get(j).setSpeed(1);
+							 group1.get(i).move();
+							 group1.get(j).move();
+							 group1.get(i).setSpeed(defaultSpeed1);
+							 group1.get(j).setSpeed(defaultSpeed2);
+							count++;
+							try {
+								Thread.sleep(5);
+							} catch (InterruptedException e) {
+								// TODO Auto-generated catch block
+								e.printStackTrace();
+							}
+						}
 					}
-				}
+			}
 		}
+		
 	}
+	
+	/**
+	 * Active the COllisionDetector
+	 */
+	public void Active(){ACTIVE=true;}
+	
+	/**
+	 * Deactive the CollisionDetector
+	 */
+	public void Deactive(){ACTIVE=false;}
+
+	/**
+	 * @return The Class name
+	 */
+	public String getName()
+	{
+		return Name;
+	}
+	
+	/**
+	 * @return true if this CollisionDetector is Active
+	 */
+	public boolean isActive(){return ACTIVE;}
+
+	@Override
+	public void run() {
+		if(ACTIVE)
+		{
+			try
+			{
+				checkCollision();
+				//Thread.sleep(5);
+			}
+			catch (Exception e)
+		      { 
+				System.out.println("Collision Manager thread error: ");
+				e.printStackTrace();
+		      }
+		}
+		
+	}
+	
+	public void setName()
+	{
+		String t = this.getClass().getCanonicalName();
+		Name=t.substring( t.lastIndexOf('.')+1 );
+	}
+
 	
 
 	

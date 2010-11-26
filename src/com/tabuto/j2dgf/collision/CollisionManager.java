@@ -2,7 +2,7 @@
 * @author Francesco di Dio
 * Date: 19 Novembre 2010
 * Titolo: CollisionManager.java
-* Versione: 0.6.3 Rev.:
+* Versione: 0.6.5 Rev.:
 */
 
 /*
@@ -34,6 +34,8 @@
 package com.tabuto.j2dgf.collision;
 
 import java.io.Serializable;
+import java.util.Observable;
+import java.util.Observer;
 import java.util.Vector;
 
 /**
@@ -43,15 +45,19 @@ import java.util.Vector;
  * This class manage a vector of CollisionDetector. <p>
  * Add Every CollisionDetector to this class, and the method {@link #RunCollisionManager()} checks every  {@linkplain CollisionDetector}
  * using the method {@linkplain CollisionDetector#checkCollision()}
+ * This class extends Observable and implements Observer 'couse it is observing the Collision Detector and
+ * allows to observe when a collision occours by throws the message "CollisionDetector.ClassName" 
+ * using the {@link Observable#notifyObservers(Object)}
+ * 
  *
  * @author tabuto83
  * 
- * @version 0.6.3
+ * @version 0.6.5
  * 
  * @see Vector
  */
 
-public class CollisionManager implements Serializable {
+public class CollisionManager extends Observable implements Serializable, Runnable, Observer {
 	
 	/**
 	 * 
@@ -62,7 +68,15 @@ public class CollisionManager implements Serializable {
 	 */
 	private Vector<CollisionDetector> CollisionsList; 
 	
-
+	/**
+	 * The Collision Manager Thread
+	 */
+	private Thread t;
+	
+	/**
+	 * Cuurrent CollisionManager's state
+	 */
+	boolean running = true;
 	
 	/**
 	 * CONSTRUCTOR 
@@ -74,6 +88,8 @@ public class CollisionManager implements Serializable {
 	public CollisionManager()
 	{
 		CollisionsList = new Vector<CollisionDetector>();
+		
+		t = new Thread(this); 
 	}
 	
 	
@@ -84,15 +100,7 @@ public class CollisionManager implements Serializable {
 	public void addCollision(CollisionDetector cd)
 	{
 		CollisionsList.add(cd);
-	}
-	
-	/**
-	 * Delete a collisionDetector from CollisionManager
-	 * @param cd {@link CollisionDetector}
-	 */
-	public void delCollision(CollisionDetector cd)
-	{
-		CollisionsList.remove(cd);
+		cd.addObserver(this);
 	}
 	
 	/**
@@ -104,13 +112,68 @@ public class CollisionManager implements Serializable {
 	}
 	
 	/**
+	 * Delete a collisionDetector from CollisionManager
+	 * @param cd {@link CollisionDetector}
+	 */
+	public void delCollision(CollisionDetector cd)
+	{
+		CollisionsList.remove(cd);
+		cd.deleteObserver(this);
+	}
+	
+/**
+ * @return the Running CollisionManager state
+ */
+public boolean isRunning(){return running;}
+	
+	/**
 	 * Calls every {@link com.tabuto.j2dgf.Sprite} in all CollisionDetector.
 	 * registered in this <code>CollisionManager</code>.
 	 */
-	public void RunCollisionManager()
+public void run() 
+{
+		
+	while(running)
 	{
-		int max= CollisionsList.size();
-		for (int i=0; i<max;i++)
-			CollisionsList.get(i).checkCollision();
+			try
+			{
+				int max= CollisionsList.size();
+				for (int i=0; i<max;i++)
+					//CollisionsList.get(i).checkCollision();
+					CollisionsList.get(i).run();
+					//Thread.sleep(5);
+			}
+			catch (Exception e)
+		    { 
+				System.out.println("Collision Manager thread error: ");
+				e.printStackTrace();
+		    }
 	}
+}
+
+/**
+ * Start the COllisionManager's Thread
+ */
+public void start()
+{
+	t.start();
+}
+
+/**
+ * Stop the CollisionManager
+ */
+public void stop()
+{
+	running=false;
+}
+
+	@Override
+	public void update(Observable arg0, Object arg1) {
+		
+	
+		this.setChanged();
+		this.notifyObservers(arg1);
+		
+	}
+	
 }

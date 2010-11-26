@@ -2,7 +2,7 @@
 * @author Francesco di Dio
 * Date: 19 Novembre 2010 
 * Titolo: CollisionBoundDetector.java
-* Versione: 0.6.3 Rev.:
+* Versione: 0.6.5 Rev.:
 */
 
 package com.tabuto.j2dgf.collision;
