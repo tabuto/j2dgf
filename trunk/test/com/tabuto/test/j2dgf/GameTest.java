@@ -1,8 +1,8 @@
 /**
 * @author Francesco di Dio
-* Date: 26/nov/2010 21.55.19
+* Date: 29/nov/2010 21.55.19
 * Titolo: GameTest.java
-* Versione: 0.5.2 Rev.a:
+* Versione: 0.5.3 Rev.a:
 */
 
 
@@ -29,13 +29,14 @@
   */
 
 package com.tabuto.test.j2dgf;
+
 import java.awt.Dimension;
 import java.awt.Graphics;
-
 import com.tabuto.j2dgf.Game2D;
 import com.tabuto.j2dgf.Group;
 import com.tabuto.j2dgf.collision.CollisionBoundDetector;
 import com.tabuto.j2dgf.collision.CollisionDetector;
+
 
 public class GameTest extends Game2D{
 
@@ -52,7 +53,7 @@ public class GameTest extends Game2D{
 	//Group<Particle> betaGroup= new Group<Particle>("Beta");
 	//Particle collision check collision between particles
 	public ParticleCollision pCollision;
-	//CollisionBoundDetector check collision woth the boundary
+	//CollisionBoundDetector check collision with the boundary
 	public CollisionBoundDetector cbd;
 	
 	
@@ -67,6 +68,13 @@ public class GameTest extends Game2D{
 	 {
 		 alfaGroup.clear(); 
 	 }
+	 
+	 //Reset the Game
+	 public void reset()
+		{
+			deleteStuff();
+			initGame();
+		}
 	
 	@Override
 	public void drawStuff(Graphics g) {
@@ -75,8 +83,6 @@ public class GameTest extends Game2D{
           {
     		//Moving the sprite
     		alfaGroup.get(i).move();
-    		//CheckCollision
-    								// cm.run();
     		 //Draw the Sprites
     		alfaGroup.get(i).drawMe(g);
     	  }
@@ -85,9 +91,11 @@ public class GameTest extends Game2D{
 
 	@Override
 	public void initGame() {
+		//Set the group name
 		alfaGroup.setGroupName("alfa");
 		//Init Particle Collision
 		pCollision = new ParticleCollision(alfaGroup);
+		//Set the distance to zero
 		pCollision.setDistance(0);
 		//Init CollisionBoundDetector
 		cbd = new CollisionBoundDetector(alfaGroup,DIM);
@@ -96,36 +104,36 @@ public class GameTest extends Game2D{
 		cbd.useReflection();
 		
 		//Registering the collisionDetectors in a CollisionManager
+		//The collision Manager automatical start they
 		cm.addCollision(cbd);
 		cm.addCollision(pCollision);
 		
-		
-		
-		//Init the sprites
+		//Build new Particle
 		for (int i = 0; i< ( N_Particles );i++)
 		{
-			//Random coordinates
+			//Get Random coordinates
 			int RandomX = (int) (1+Math.random() * (DIM.width -5) );
 			int RandomY = (int) (1+Math.random() * (DIM.height-5) );
 			//Create a new Particle SPrite
 			pArray[i] = new Particle(DIM,RandomX , RandomY);
-			//Random Angle
+			//set Random Angle
 			pArray[i].setAngleRadians(Math.random()*2 * Math.PI );
-			//Random radius
+			//set Random radius
 		    pArray[i].setRadius(  (int)( 1+Math.random()*11 )); // Assegno un raggio casuale
-			pArray[i].setSpeed(80);
+			//set the speed
+		    pArray[i].setSpeed(80);
 		    //Add the new Particle in the ParticleGroup
 		    alfaGroup.add(pArray[i]);
 		}
-		//Start CollisionManager
-		cm.start();
 		
 	}
 	
 	//CollisionDetector: What does it do when a collision checked?
+	//extends the CollisionDetector class
 	@SuppressWarnings("serial")
 		public class ParticleCollision extends CollisionDetector
 		{
+			//Create two particle
 			Particle p1,p2;
 			//Constructor
 			 public ParticleCollision(Group<Particle> sp1)
@@ -136,7 +144,7 @@ public class GameTest extends Game2D{
 			public void CollisionAction(int s1, int s2)
 			  {
 				//Cast to class extends Sprite 
-				
+				//p1 e p2 are the collided particle
 				p1 = (Particle) this.group1.get(s1); 
 				p2 = (Particle) this.group1.get(s2); 
 				
@@ -150,8 +158,6 @@ public class GameTest extends Game2D{
 					p2.setRadius( p1.getRadius());
 				else
 					p1.setRadius( p2.getRadius());
-				
-				//System.out.println(this.getName());
 			  } 
 		}
 

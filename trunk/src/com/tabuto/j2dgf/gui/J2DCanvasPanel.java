@@ -1,8 +1,8 @@
 /**
 * @author Francesco di Dio
-* Date: 19 Novembre 2010 18.14
+* Date: 29 Novembre 2010 18.14
 * Titolo: J2DCanvasPanel.java
-* Versione: 0.6.5 Rev.:
+* Versione: 0.7.0 Rev.:
 */
 
 
@@ -47,28 +47,31 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.util.Observable;
 import java.util.Observer;
-
 import javax.swing.JPanel;
-
 import com.tabuto.j2dgf.Game2D;
-import com.tabuto.j2dgf.collision.CollisionManager;
 
 
 /**
  * Abstract class <code>J2DCanvasPanel</code> extends JPanel.
  * <p>
  * This Class implements a CavasPanel where the sprite "live". <br>
- * This Class should be had a CollisionDetector inner classes;
+ * This Class should be a Control layer for the Game model
+ * Use this class simply extends it and call the drawStuff(Game) method
  * 
  * @see com.tabuto.j2dgf.collision.CollisionDetector
  * 
  * @author tabuto83
  *
- * @version 0.6.5
+ * @version 0.7.0
+ * 
+ * @see Game2D
+ * @see CollisionDetector
+ * @see Sprite
+ * @see Group
  */
 
 //TODO: Load and save Game are methods of J2DCanvasPanel
-public class J2DCanvasPanel extends JPanel implements Runnable, Observer {
+public class J2DCanvasPanel extends JPanel implements  Observer {
 
 	/**
 	 * 
@@ -89,12 +92,12 @@ public class J2DCanvasPanel extends JPanel implements Runnable, Observer {
 	 protected transient Image BufferedImage;
 	 
 	 
-	 private boolean PLAY=true;
+	 protected boolean PLAY=true;
 	
 	 @SuppressWarnings("unused")
-	private boolean STOP=false;
+	protected boolean STOP=false;
 	 
-	public Game2D Game;
+	//public Game2D Game;
 	 
 	 /**
 	  * A BufferStrategy to implements ActiveRendering and DoubleBuffer
@@ -102,127 +105,27 @@ public class J2DCanvasPanel extends JPanel implements Runnable, Observer {
 	 protected transient BufferStrategy bs;      
 	 
 	 /**
-	  * A CollisionManager declaration to manage CollisionDetector
-	  */
-	 protected CollisionManager cm;
-	 
-	 /**
 	  * The color panel's background
 	  */
 	 protected Color background;
+
 	 /**
-	  * CONSTRUCTOR
-	  * <p>
-	  * public J2DCanvasPanel(int w, int h)
-	  * <p>
-	  * Constructor of <code>J2DCanvasPanel</code> that declares the new dimension of the JPanel;
-	  * @param w <code>int</code> real width
-	  * @param h <code>int</code> real height
+	  * Construct a new J2DCanvasPanel of d Dimension
+	  * @param d Dimension of the new Panel
+	  * @see Dimension
 	  */
-	 public J2DCanvasPanel(int w, int h)
-		{
-			DIM = new Dimension(w,h);
-			//VIS = new Dimension(vw,vh);
-			background = new Color(0,0,0); //Default value = BLACK
-			cm = new CollisionManager();
-			//setAutoscrolls(true);
-	        setDoubleBuffered(true);
-	        //this.BufferedImage = createImage(DIM.width,DIM.height );
-	        
-		}
-	 
-	 public J2DCanvasPanel(Game2D game)
+	 public J2DCanvasPanel(Dimension d)
 	 {
-		 DIM = game.getDimension();
+		 DIM = d;
 		 background = new Color(0,0,0); //Default value = BLACK
 		 setDoubleBuffered(true);
-		 Game=game;
-		 Game.addObserver(this);
-	 }
-	 
-	 /**
-	  * This <code>abstract</code> method initialize the component of the game:
-	  * <ul>
-	  *  <li> {@link com.tabuto.j2dgf.Group}
-	  *  <li> {@link com.tabuto.j2dgf.collision.CollisionDetector} 
-	  *  <li> {@link com.tabuto.j2dgf.collision.CollisionBoundDetector} (if needs!)
-	  *  </ul>
-	  *  N.B. The {@link CollisionManager} has been initialize in the Costructor method.
-	  */
-	 public void initStuff(){};
-	 
-	 
-	 
-	 /**
-	  * Set the Dimension (width and heigth) of the panel
-	  * @param dim {@link Dimension}
-	  */
-	 public void setDimension(Dimension dim) {DIM=dim;}
-	 
-	 /**
-	  * Return the Panel's <code>Dimension</code>
-	  * @return Dimension {@link J2DCanvasPanel#DIM}
-	  */
-	 public Dimension getDimension(){return DIM;}
-	 
-	 /**
-	  * Return the panel's BufferStrategy
-	  * @return bs
-	  */
-	 @SuppressWarnings("all")
-	 public BufferStrategy getBufferStrategy(){return bs;}
-	 
-	 /**
-	  * Set the panel's BufferStrategy 
-	  * @param b {@link BufferStrategy}
-	  */
-	 public void setBufferStrategy(BufferStrategy b){bs=b;}
-	 
-	 /**
-	  * Set the panel's thread sleep time.<br>
-	  * Default value: 10
-	  * @param time <code>int</code>
-	  */
-	 public void setSleep(int time)
-	 {
-		 if (time>0)
-		 sleep=time;
-	 }
-	 
-	 /**
-	  * Return the panel's thread sleep time 
-	  * @return sleep int
-	  */
-	 public int getSleep(){return sleep;}
-	 
-	 /**
-	  * Return the Background Color 
-	  * @return {@link java.awt.Color} Background
-	  */
-	 public Color getBackgroundColor(){return this.background;}
-	 
-	 /**
-	  * Set new background color as parameter b
-	  * @param b {@link Color}
-	  */
-	 public void setBackgroundColor(Color b){this.background=b;}
-	 
-	 /**
-	  * Set new background color as a new RGB component color
-	  * @param r <code>int</code> red component value (0-255)
-	  * @param g <code>int</code> green component value (0-255)
-	  * @param b <code>int</code> blue component value (0-255)
-	  */
-	 public void setBackgroundColor(int r, int g, int b)
-	 {
-		 Color B = new Color(r,g,b);
-		 this.background = B;
+	
 	 }
 	 
 	 /**
 	  * Refresh the panel to draw the new position of the sprite in a buffer
 	  */
-	 public void drawStuff()
+	 public void drawStuff(Game2D Game)
 	    {
 	            try
 	            { 
@@ -230,9 +133,6 @@ public class J2DCanvasPanel extends JPanel implements Runnable, Observer {
 	            	Graphics buffer =  BufferedImage.getGraphics();
 	            	buffer.setColor(background);
 	            	buffer.fillRect(0, 0, DIM.width, DIM.height);      
-	            	if(Game==null)
-	            		drawSprite(buffer);
-	            	else
 	            		Game.drawStuff(buffer);
 	            }//end try
 	            catch (Exception e)
@@ -243,28 +143,35 @@ public class J2DCanvasPanel extends JPanel implements Runnable, Observer {
 	                //System.exit(2);
 	            }
 	       
-		}   //end of DrawStuff
-	 
+		} 
+	  
+
+	 /**
+	  * Return the Background Color 
+	  * @return {@link java.awt.Color} Background
+	  */
+	 public Color getBackgroundColor(){return this.background;}
 	 
 	 /**
-	  * Should be contains the operations to do for moving the sprite;<br>
-	  * <p>
-	  * Example:
-	  * <pre>
-	  * for(i=0;MySpriteGroup.group.getSize()>i;i++)	   
-      *    { 
-      *		MySpriteGroup.get(i).move();
-      *		 cm.RunCollisionManager();
-      *		MySpriteGroup.get(i).drawMe(g2d);
-      *	  }
-      *</pre>
-	  * @param g {@link Graphics}
-	  * @deprecated Use {@link Game2D#drawStuff(Graphics)}
+	  * Return the panel's BufferStrategy
+	  * @return bs
 	  */
-	 protected void drawSprite(Graphics g){}
+	 @SuppressWarnings("all")
+	 public BufferStrategy getBufferStrategy(){return bs;}
 	 
+	 /**
+	  * Return the Panel's <code>Dimension</code>
+	  * @return Dimension {@link J2DCanvasPanel#DIM}
+	  */
+	 public Dimension getDimension(){return DIM;}
 	 
-	 // get preferred ImagePanel size
+	 /**
+	  * Return the Minimum Size of the Panel as a {@link Dimension}
+	  */
+	 public Dimension getMinimumSize()
+	  {  
+	     return new Dimension(300,300);
+	  }
 	 
 	 /**
 	  * Return the PreferredSize of this Panel as a {@link Dimension}
@@ -275,44 +182,45 @@ public class J2DCanvasPanel extends JPanel implements Runnable, Observer {
 	  }
 	 
 	 /**
-	  * Return the Minimum Size of the Panel as a {@link Dimension}
+	  * Return the panel's thread sleep time 
+	  * @return sleep int
 	  */
-	 public Dimension getMinimumSize()
-	  {  
-	     return new Dimension(300,300);
-	  }
-
-	 /**
-	  * 
-	  */
-	  public void update(Graphics g) {
-		    paint(g);
-		  }
-	  
-	  /**
-	   * Draw the content of this CanvasPanel
-	   */
-	  public void run()
-	    /* Repeatedly update, render, sleep */
-	    {
-		  
-	      while(Game.isActive()) {
-		   this.drawStuff();   // render to a buffer
-	       panelDraw();  // draw buffer to screen
+	 public int getSleep(){return sleep;}
+	 
+		/**
+		 * Load a previously saved game stored in a file which PATH is path
+		 * @param path The path of the Game2D saved file
+		 */
+	public Game2D loadGame(String path)
+		{
+			Game2D loaded = null;
+			FileInputStream fis = null;
+		    ObjectInputStream in = null;
+			try
+			 {
+			   fis = new FileInputStream(path);
+		       in = new ObjectInputStream(fis);
+			   loaded = (Game2D)in.readObject();
+		       in.close();
+		      
+		     }
+		     catch(IOException ex)
+		     {
+			     ex.printStackTrace();
+		     }
+		     catch(ClassNotFoundException ex)
+		     {
+		     ex.printStackTrace();
+		     }
+		     
+		     loaded.executeCollisionManager();
+		     return loaded;
+		}
 	
-	        try {
-	          Thread.sleep(sleep);  // sleep a bit
-	        }
-	        catch(InterruptedException ex){}
-	      }
-
-	    } // end of run()
-	  
-
 	  /**
 	   * Flush the content of the BufferImage on the Panel
 	   */
-	  private void panelDraw()
+	  protected void panelDraw()
 	  {
 		  Graphics g;
 	      try {
@@ -324,10 +232,40 @@ public class J2DCanvasPanel extends JPanel implements Runnable, Observer {
 	      }
 	      catch (Exception e)
 	      { System.out.println("Graphics context error: " + e);  }
-		
 		  
 	  }
-	  
+	 
+	  /**
+	   * Restart the Drawing of the panel after a previously {@link J2DCanvasPanel#Stop()}
+	   * @deprecated
+	   * Use the activate() deactivate() Game2D methods
+	   * @see Game2D
+	   */
+	  public void Play()
+	  {
+		  this.PLAY=true;
+	  }
+	 
+	  /**
+	   * Draw the Game2D Sprites
+	   * @param Game Game2D
+	   */
+	  public void run(Game2D Game)
+	    /* Repeatedly update, render, sleep */
+	    {
+		  
+	      while(Game.isActive()) {
+		   this.drawStuff(Game);   // render to a buffer
+	       panelDraw();  // draw buffer to screen
+	
+	        try {
+	          Thread.sleep(sleep);  // sleep a bit
+	        }
+	        catch(InterruptedException ex){}
+	      }
+
+	    } 
+	 
 	  /**
 	   * Save a Game to a File
 	   * @param game Game2D to save
@@ -351,38 +289,57 @@ public class J2DCanvasPanel extends JPanel implements Runnable, Observer {
 				  		ex.printStackTrace();
 					}
 		}
+	  
+	 /**
+	  * Set new background color as parameter b
+	  * @param b {@link Color}
+	  */
+	 public void setBackgroundColor(Color b){this.background=b;}
+	 
+	 /**
+	  * Set new background color as a new RGB component color
+	  * @param r <code>int</code> red component value (0-255)
+	  * @param g <code>int</code> green component value (0-255)
+	  * @param b <code>int</code> blue component value (0-255)
+	  */
+	 public void setBackgroundColor(int r, int g, int b)
+	 {
+		 Color B = new Color(r,g,b);
+		 this.background = B;
+	 }
+	 
 
-	/**
-	 * Load a previously saved game stored in a file which PATH is path
-	 * @param path The path of the Game2D saved file
-	 */
-	public void loadGame(String path)
-	{
-		Game2D loaded = null;
-		FileInputStream fis = null;
-	    ObjectInputStream in = null;
-		try
-		 {
-		   fis = new FileInputStream(path);
-	       in = new ObjectInputStream(fis);
-		   loaded = (Game2D)in.readObject();
-	       in.close();
-	       if(loaded instanceof Game2D)
-	    	   this.Game = loaded;
-	     }
-	     catch(IOException ex)
-	     {
-		     ex.printStackTrace();
-	     }
-	     catch(ClassNotFoundException ex)
-	     {
-	     ex.printStackTrace();
-	     }
-	}
+	 /**
+	  * Set the panel's BufferStrategy 
+	  * @param b {@link BufferStrategy}
+	  */
+	 public void setBufferStrategy(BufferStrategy b){bs=b;}
+
+	 /**
+	  * Set the Dimension (width and heigth) of the panel
+	  * @param dim {@link Dimension}
+	  */
+	 public void setDimension(Dimension dim) {DIM=dim;}
+	 
+	 
+	 /**
+	  * Set the panel's thread sleep time.<br>
+	  * Default value: 10
+	  * @param time <code>int</code>
+	  */
+	 public void setSleep(int time)
+	 {
+		 if (time>0)
+		 sleep=time;
+	 }
+
 	  
 	  //private void drawSprite(){Graphics2D g = (Graphics2D) this.getGraphics(); drawStuff(g);}
 	  /**
 	   * Stop the drawing of the Panel
+	   * @deprecated
+	   * Use the activate() deactivate() Game2D methods
+	   * @see Game2D
 	   */
 	  public void Stop()
 	  {
@@ -398,26 +355,21 @@ public class J2DCanvasPanel extends JPanel implements Runnable, Observer {
       		}
 	  }
 	  
-	  /**
-	   * Restart the Drawing of the panel after a previously {@link J2DCanvasPanel#Stop()}
-	   */
-	  public void Play()
-	  {
-		  this.PLAY=true;
-	  }
+	
+	 /**
+	  * Not used
+	  */
+	 public void update(Graphics g) {
+			    paint(g);
+			  }
 	  
-	  /**
-	   * Draw a single frame animation on the CanvasPAnel
-	   */
-	  public void Step()
-	  {
-		  this.drawStuff();   // render to a buffer
-	       this.panelDraw();  // draw buffer to screen
-	  }
-
-	@Override
+	/**
+	 * This Panel can be observer of other observable class,
+	 * override this method to implements a change state when an observable
+	 * object change state.
+	 */
 	public void update(Observable arg0, Object arg1) {
-		// TODO Auto-generated method stub
+		
 		
 	}
 }
