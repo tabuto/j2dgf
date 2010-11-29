@@ -1,8 +1,8 @@
 /**
 * @author Francesco di Dio
-* Date: 26/nov/2010 15.14.21
+* Date: 29/nov/2010 15.14.21
 * Titolo: Game2D.java
-* Versione: 0.6.5 Rev.a:
+* Versione: 0.7.0 Rev.a:
 */
 
 
@@ -32,17 +32,50 @@ package com.tabuto.j2dgf;
 
 import java.awt.Dimension;
 import java.awt.Graphics;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.ObjectOutputStream;
 import java.io.Serializable;
 import java.util.Observable;
 
 import com.tabuto.j2dgf.collision.CollisionManager;
 
-
+/**
+ * Game2D is an Abstract Class that represents a single Game.
+ * <p>
+ * Extends this class to add the Sprites Group and your own CollisionDetector
+ * Override the {@linkplain Game2D#initGame()} methods to initialize Groups and register Collsions 
+ * to the CollisionManager.
+ * Override the {@link Game2D#drawStuff(Graphics)} to execute the Sprite Drawing. 
+ * Use the methods provides from class Group to move and/or draw your entire sprite collection.
+ * <p>
+ * See the GameTest class on the test package.
+ * 
+ * @author tabuto83
+ * 
+ * @version 0.7.0
+ * 
+ * @see Group
+ * @see Sprite
+ * @see CollisionManager
+ * @see CollisionDetector
+ * 
+ */
 public abstract class Game2D extends Observable implements Serializable{
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+
+	/**
+	 * Actual Game State
+	 */
+	protected boolean ACTIVE=true;
+
+	/**
+	 * CollisionManager object
+	 * @see CollisionManager
+	 */
+	protected CollisionManager cm;
+	
 	/**
 	 * Game Playfield Dimension
 	 */
@@ -54,23 +87,21 @@ public abstract class Game2D extends Observable implements Serializable{
 	protected String Name=""; 
 	
 	/**
-	 * Actual game state, if saved (save action allows) else only saveAs permitted;
-	 */
-	protected boolean saved=false;
-	/**
 	 * The Directory path where Game file is saved/loaded.
 	 * Not yet used
 	 */
 	protected String PATH="";
 	
-	protected boolean ACTIVE=true;
-	
-	//COLLISIONS
-	protected CollisionManager cm;
+	/**
+	 * Actual game state, if saved (save action allows) else only saveAs permitted;
+	 */
+	protected boolean saved=false;
+
 	
 	/**
 	 * Game2D Constructor 
-	 * @param dim Dimension of the playfield canvas
+	 * @param dim  Dimension of the Game's canvas playfield
+	 * @see Dimension
 	 */
 	public Game2D(Dimension dim)
 	{
@@ -80,32 +111,75 @@ public abstract class Game2D extends Observable implements Serializable{
 	
 
 	/**
-	 * Set this Game2D Active
+	 * Set this Game Active
 	 */
 	public void activate()
 	{
 		ACTIVE=true;
-	}
-	
-	public void deactivate()
-	{
-		ACTIVE=false;
+		cm.resume();
 	}
 	
 	/**
-	 * @return the name
+	 * Set this Game not Active, set the CollisionManager thread pool to pause
+	 */
+	public void deactivate()
+	{
+		ACTIVE=false;
+		cm.pause();
+	}
+	
+	 /**
+	  * Should be contains the operations to do for moving the sprite;<br>
+	  * <p>
+	  * Example:
+	  * <pre>
+	  *
+      *		MySpriteGroup.move();
+      *		MySpriteGroup.draw(g);
+      *	
+      *</pre>
+	  * @param g {@link Graphics}
+	  * @see Group
+	  */
+	public abstract void drawStuff(Graphics g);
+	
+	/**
+	 * Execute the CollisionManager thread pool
+	 * @see CollisionManager
+	 */
+	public void executeCollisionManager()
+	{
+		cm.execute();
+	}
+	
+	/**
+	 * @return the Playfield's Game Dimension 
+	 */
+	public Dimension getDimension() {
+		return this.DIM;
+	}
+	
+	/**
+	 * @return the Game's name
 	 */
 	public String getName() {
 		return Name;
 	}
 
-	/**
-	 * @param name the name to set
-	 */
-	public void setName(String name) {
-		Name = name;
-	}
-
+	 /**
+	  * This <code>abstract</code> method initialize the component of the game:
+	  *  <li>  Group
+	  *  <li> CollisionDetector
+	  *  <li> CollisionBoundDetector (if needs!)
+	  *  </ul>
+	  *  N.B. The  CollisionManager has been initialize in the Costructor method.
+	  *  @see CollisionManager
+	  *  @see Group
+	  *  @see CollisionBoundDetector
+	  *  @see CollisionDetector
+	  */
+	public abstract void initGame();
+	
 	/**
 	 * @return ACTIVE Game2D state
 	 */
@@ -114,21 +188,29 @@ public abstract class Game2D extends Observable implements Serializable{
 	}
 	
 	/**
-	 * @return the saved
+	 * @return true if Game's saved
 	 */
 	public boolean isSaved() {
 		return saved;
 	}
 
+
 	/**
-	 * @param saved the saved to set
+	 * @param name the Game's name to set
+	 */
+	public void setName(String name) {
+		Name = name;
+	}
+	
+	/**
+	 * @param saved the Game's saved state to set
 	 */
 	public void setSaved(boolean saved) {
 		this.saved = saved;
 	}
 
 	/**
-	 * @return the pATH
+	 * @return the Game's Saved files Path 
 	 */
 	public String getPATH() {
 		return PATH;
@@ -136,44 +218,11 @@ public abstract class Game2D extends Observable implements Serializable{
 
 	
 	/**
-	 * @param pATH the pATH to set
+	 * @param pATH the Game's files pATH to set
 	 */
 	public void setPATH(String pATH) {
 		PATH = pATH;
 	}
 
-	/**
-	 * @return the dIM
-	 */
-	public Dimension getDimension() {
-		return DIM;
-	}
 	
-	 /**
-	  * This <code>abstract</code> method initialize the component of the game:
-	  * <ul>
-	  *  <li> {@link com.tabuto.j2dgf.Group}
-	  *  <li> {@link com.tabuto.j2dgf.collision.CollisionDetector} 
-	  *  <li> {@link com.tabuto.j2dgf.collision.CollisionBoundDetector} (if needs!)
-	  *  </ul>
-	  *  N.B. The {@link CollisionManager} has been initialize in the Costructor method.
-	  */
-	public abstract void initGame();
-	
-	
-	 /**
-	  * Should be contains the operations to do for moving the sprite;<br>
-	  * <p>
-	  * Example:
-	  * <pre>
-	  * for(i=0;MySpriteGroup.group.getSize()>i;i++)	   
-     *    { 
-     *		MySpriteGroup.get(i).move();
-     *		 cm.RunCollisionManager();
-     *		MySpriteGroup.get(i).drawMe(g2d);
-     *	  }
-     *</pre>
-	  * @param g {@link Graphics}
-	  */
-	public abstract void drawStuff(Graphics g);
 }

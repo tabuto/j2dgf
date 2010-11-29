@@ -1,8 +1,8 @@
 /**
 * @author Francesco di Dio
-* Date: 19/nov/2010 21.41.16
+* Date: 29/nov/2010 21.41.16
 * Titolo: Group.java
-* Versione: 0.6.5 Rev.a:
+* Versione: 0.7.0 Rev.a:
 */
 
 
@@ -48,16 +48,16 @@ import com.tabuto.util.Point;
 * 
 * @author tabuto83
 * 
-* @version 0.6.5
+* @version 0.7.0
+* 
+* @see Sprite
 */
 
 
 public class Group<E extends Sprite> extends Vector<E> implements Serializable {
 
 
-	/**
-	 * Not use
-	 */
+    //NOT USE
 	//private static final long serialVersionUID = 2075695098828857052L;
 
 	/**
@@ -162,13 +162,15 @@ public void activeAll()
 */
 public synchronized boolean addSprite(E object) 
 	{
-		if (elementCount == elementData.length) {
+	
+		if (elementCount == elementData.length) 
+		{
         this.growByOne();
-     }
+		}
       elementData[elementCount++] = object;
       modCount++;
       return true;
-      }
+    }
 
 /**
  * Set false the group ACTIVE
@@ -331,7 +333,15 @@ public void setDeactive(int i)
  */
 public void setGroupName(String s){GroupName=s;}
 
-
+/**
+ * Select the nearest Sprite to Point p with a tolerance value.
+ * Useful for Sprite mouse selection
+ * @param p Point for which we want search the nearest Sprite
+ * @param tolerance value
+ * @return Nearest Sprite near Point p
+ * 
+ * @see Point
+ */
 public synchronized E selectSprite(Point p, int tolerance)
 	{
 	 int find=-1;
