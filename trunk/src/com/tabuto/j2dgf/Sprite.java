@@ -1,8 +1,8 @@
 /**
 * @author Francesco di Dio
-* Date: 25 Novembre 2010 18.14
+* Date: 29 Novembre 2010 18.14
 * Titolo: Sprite.java
-* Versione: 0.6.5 Rev.9:
+* Versione: 0.7.0 Rev.9:
 */
 
 
@@ -46,19 +46,22 @@ import com.tabuto.util.Vettore;
  * Sprite is an Abstract Class that represents an object able draws himself and move on
  * a playfield of fixed dimension.
  * <p>
- * It has got an ACTIVE flag and a {@linkplain #ThisIsMe(Graphics)} method called by {@linkplain #drawMe(Graphics)} 
+ * It has got an ACTIVE flag and a {@linkplain Sprite#ThisIsMe(Graphics)} method called by {@linkplain Sprite#drawMe(Graphics)} 
  * method when ACTIVE is true; <br>
  * Every Sprite has a position defined by two variables (xc and yc) that identifies the sprite's center;
  * Every sprite also has speed and angle variable.<br>
  * To instance a new Sprite you have to call the constructor method {@linkplain #Sprite(Dimension,double, double)}
  * to set the dimension plane where sprite live and his start position.<br>
- * Every sprite can be part of {@link Group} <br>
+ * Every sprite can be part of Group <br>
  * 
  * @author tabuto83
  * 
- * @version 0.6.5
+ * @version 0.7.0
  * 
  * @see Group
+ * @see Point
+ * @see Vettore
+ * @see Game2D
  * 
  */
 
@@ -73,7 +76,8 @@ public abstract class Sprite extends Observable implements Drawable, Serializabl
 
 
 	/**
-	 * {@link Vettore} vector represent position, direction and speed of each sprite
+	 *  Vector represent position, direction and speed of each sprite
+	 *  @see Vettore
 	 */
 	protected Vettore vector;
 	
@@ -99,7 +103,9 @@ public abstract class Sprite extends Observable implements Drawable, Serializabl
 	 */
     private int id; 
     
-    
+    /**
+     * True if collided. Not yet use
+     */
 	protected boolean collided; 
 	
 	/**
@@ -132,13 +138,16 @@ public abstract class Sprite extends Observable implements Drawable, Serializabl
     public int DefaultSpeed = 50; 
 
     /**
-     * Max radius of Sprite for increase the speed of CheckCollision method;
+     * Max radius of Sprite improve CheckCollision performance;
      * If the distance of two sprite is greater of this value, CheckCollision dosn't
      * check other value.
+     * @see CollisionDetector
      */
     protected int CollidedRadius;
     
-   
+    /**
+     * The name of this Sprite
+     */
     protected String Name="";
     
     /**
@@ -191,7 +200,15 @@ public abstract class Sprite extends Observable implements Drawable, Serializabl
 	  public double getAngle(){return vector.getDirectionRadians();}
 	  
 	  /**
-	   * @return the {@link Dimension} of playfiled where Sprite lives on
+	   * Return the sprite's Angle direction in radians
+	   * @return Angle an angle express in Radians
+	   * @see Vettore
+	   */
+	  public int getAngleDegrees(){return (int) vector.getDirectionDegrees();}
+	  
+	  /**
+	   * @return the Dimension of playfiled where Sprite lives on
+	   * @see Dimension
 	   */
 	  public Dimension getDimension(){return d;}
 	  
@@ -259,7 +276,7 @@ public abstract class Sprite extends Observable implements Drawable, Serializabl
 	  
 	  /**
 	   * Return the sprite's center y coordinate
-	   * @return @return the actual Sprite Center y coordinates
+	   * @return the actual Sprite Center y coordinates
 	   */
 	public double getY(){return vector.origin.y;}
 
@@ -271,9 +288,12 @@ public abstract class Sprite extends Observable implements Drawable, Serializabl
 	
     /**
      * Return true if this <code>Sprite</code> collides with other one.
+     * This method is used by CollisionDetector class
+     * @see CollisionDetector
      */
     public boolean isCollide(Sprite other)
     {
+      //TODO: is possible to improve perfomance of this method?
   	  double distance = this.getPosition().getDistance(other.getPosition());
   	  boolean result=false;
   	  
@@ -330,7 +350,7 @@ public abstract class Sprite extends Observable implements Drawable, Serializabl
      * Return true if this <code>Sprite</code> collides with other or if
      * the distance beetween sprite is minus than DIST
      * @param other <code>Sprite</code>
-     * @param DIST <code>int</code> distance which behind the sprites collide;
+     * @param DIST <code>int</code> distance which behind the Sprites collide;
      * @return {@code boolean}
      */
       public boolean isCollide(Sprite other, double DIST)
@@ -391,7 +411,7 @@ public abstract class Sprite extends Observable implements Drawable, Serializabl
  }
 
 	  /**
-	   * Calculate the new Sprite position coordinate in terms of speed and angle.
+	   * Calculate the new Sprite position coordinate in terms of speed and angle and actual position
 	   * @see Sprite#moveTo(double,double)
 	   */
       public void move()
@@ -406,10 +426,11 @@ public abstract class Sprite extends Observable implements Drawable, Serializabl
       }
 	 
 	  /** 
-	   * Set sprite's direction in order to reach the nx,ny coordinate's point
+	   * Set sprite's angle direction in order to reach the nx,ny coordinate's point
 	   * @param  nx <code>double</code> X direction which Sprite move to
 	   * @param  ny <code>double</code> Y direction which Sprite move to
 	   * @see Sprite#move()
+	   * @see Vettore
 	   */
 	  public void moveTo(double nx, double ny)
 	  {
@@ -433,7 +454,7 @@ public abstract class Sprite extends Observable implements Drawable, Serializabl
 	  }
 	  
 	  /** 
-	   * Set sprite's direction in order to reach the Point p
+	   * Set sprite's direction in order to reach the Sprite s
 	   * @param  s <code>Sprite</code> which this Sprite move to
 	   * @see Sprite#move()
 	   */
@@ -455,8 +476,8 @@ public abstract class Sprite extends Observable implements Drawable, Serializabl
 	  }
 	  
 	  /**
-	   * Accepts a radians values and set the sprite angle
-	   * @param angle an angle express in radians
+	   * Accepts a radiant values and set the sprite angle
+	   * @param angle an angle express in radiant
 	   */
 	  public void setAngleRadians(double angle)
 	  {
@@ -484,7 +505,8 @@ public abstract class Sprite extends Observable implements Drawable, Serializabl
 	  public void setId(int ID){id=ID;}
 
       /**
-       * Set the
+       * Set the North, South, West, East pixel offset of this sprite in order to let
+       * CollisionDetector to check collisions between sprites
        * @param n <code>int</code>max pixel above the Sprite center
        * @param s <code>int</code>max pixel under the Sprite center
        * @param w <code>int</code>max pixel on the left of the Sprite center
@@ -503,7 +525,7 @@ public abstract class Sprite extends Observable implements Drawable, Serializabl
   	public void setName(String n){Name = n;}
       
 	  /**
-	   * Accept a int between 0 and 100 and set the sprite's speed
+	   * Accept an integer between 0 and 100 and set the sprite's speed
 	   * @param speed int Sprite's speed
 	   */
 	  public void setSpeed(int speed)
@@ -547,7 +569,9 @@ public abstract class Sprite extends Observable implements Drawable, Serializabl
 	   */
 	  public void setY(double y) {vector.setNewOriginY(y);}  
 	  
-	  
+	  /**
+	   * Not yet implemented
+	   */
 	  public void swichCollided() { collided = !collided;}
 	  
 	  //public abstract void Play();
