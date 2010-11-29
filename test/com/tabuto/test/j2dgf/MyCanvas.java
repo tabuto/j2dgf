@@ -1,18 +1,14 @@
 /**
 * @author Francesco di Dio
-* Date: 05 Novembre 2010 18.14
+* Date: 29 Novembre 2010 18.14
 * Titolo: DPanel.java
-* Versione: 0.5.2 Rev:34:
+* Versione: 0.5.3 Rev:34:
 */
 
 package com.tabuto.test.j2dgf;
 
-import java.awt.Graphics;
-
+import java.awt.Dimension;
 import com.tabuto.j2dgf.Game2D;
-import com.tabuto.j2dgf.Group;
-import com.tabuto.j2dgf.collision.CollisionBoundDetector;
-import com.tabuto.j2dgf.collision.CollisionDetector;
 import com.tabuto.j2dgf.gui.J2DCanvasPanel;
 
 /*
@@ -48,12 +44,21 @@ public class MyCanvas extends J2DCanvasPanel{
 
 
 	//Constructor Method
-	public MyCanvas(Game2D g)
+	public MyCanvas(Dimension d)
 	{
-		super(g);
+		super(d);
 	}
 	
 
+	 /**
+	   * Draw a single frame animation on the CanvasPAnel
+	   */
+	  public void Step(Game2D Game)
+	  {
+		  //TODO: fix this code
+		  drawStuff(Game);   // render to a buffer
+	       panelDraw();  // draw buffer to screen
+	  }
 	 
 	
 	 

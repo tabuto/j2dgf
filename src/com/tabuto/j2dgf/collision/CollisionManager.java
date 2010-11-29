@@ -1,8 +1,8 @@
 /**
 * @author Francesco di Dio
-* Date: 19 Novembre 2010
+* Date: 29 Novembre 2010
 * Titolo: CollisionManager.java
-* Versione: 0.6.5 Rev.:
+* Versione: 0.7.0 Rev.:
 */
 
 /*
@@ -37,27 +37,31 @@ import java.io.Serializable;
 import java.util.Observable;
 import java.util.Observer;
 import java.util.Vector;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 /**
  * 
  * class <code>CollisionManager</code>
  * <p>
  * This class manage a vector of CollisionDetector. <p>
- * Add Every CollisionDetector to this class, and the method {@link #RunCollisionManager()} checks every  {@linkplain CollisionDetector}
- * using the method {@linkplain CollisionDetector#checkCollision()}
- * This class extends Observable and implements Observer 'couse it is observing the Collision Detector and
- * allows to observe when a collision occours by throws the message "CollisionDetector.ClassName" 
+ * Add Every CollisionDetector to this class and CollisionManager schedule the CollisionDetector threads
+ * to run their only task: CheckCollision methods.
+ * This class extends Observable and implements Observer 'cause it is observing the Collision Detector and
+ * allows to observe when a collision occurs by throws the message "CollisionDetector.ClassName" 
  * using the {@link Observable#notifyObservers(Object)}
  * 
  *
  * @author tabuto83
  * 
- * @version 0.6.5
+ * @version 0.7.0
  * 
  * @see Vector
+ * @see CollisionDetector
+ * @see CollisionBoundDetector
  */
 
-public class CollisionManager extends Observable implements Serializable, Runnable, Observer {
+public class CollisionManager extends Observable implements Serializable, Observer {
 	
 	/**
 	 * 
@@ -69,18 +73,13 @@ public class CollisionManager extends Observable implements Serializable, Runnab
 	private Vector<CollisionDetector> CollisionsList; 
 	
 	/**
-	 * The Collision Manager Thread
+	 * The Collision Manager Thread executor service
 	 */
-	private Thread t;
+	transient public ExecutorService executor; 
+
+	private int DEFAULT_MAX_COLLISIONDETECTOR_THREADS = 10;
 	
 	/**
-	 * Cuurrent CollisionManager's state
-	 */
-	boolean running = true;
-	
-	/**
-	 * CONSTRUCTOR 
-	 * <p>
 	 * public CollisionManager()
 	 * <p>
 	 * The constructor instances the CollisionDetector Vector
@@ -88,10 +87,20 @@ public class CollisionManager extends Observable implements Serializable, Runnab
 	public CollisionManager()
 	{
 		CollisionsList = new Vector<CollisionDetector>();
-		
-		t = new Thread(this); 
+		executor = Executors.newFixedThreadPool(DEFAULT_MAX_COLLISIONDETECTOR_THREADS);
 	}
 	
+	/**
+	 * public CollisionManager()
+	 * <p>
+	 * The constructor instances the CollisionDetector Vector
+	 * @param maxPoolThreadsNumber the max number of Collision Thread it can manage
+	 */
+	public CollisionManager(int maxPoolThreadsNumber)
+	{
+		CollisionsList = new Vector<CollisionDetector>();
+		executor = Executors.newFixedThreadPool(maxPoolThreadsNumber);
+	}
 	
 	/**
 	 * Add a collision detector on the CollisionManager
@@ -101,12 +110,13 @@ public class CollisionManager extends Observable implements Serializable, Runnab
 	{
 		CollisionsList.add(cd);
 		cd.addObserver(this);
+		executor.execute(cd);
 	}
 	
 	/**
 	 * Delete all CollisionDetector from CollisionManager
 	 */
-	public void clearCollision()
+	public void clearCollisions()
 	{
 		CollisionsList.clear();
 	}
@@ -121,52 +131,79 @@ public class CollisionManager extends Observable implements Serializable, Runnab
 		cd.deleteObserver(this);
 	}
 	
-/**
- * @return the Running CollisionManager state
- */
-public boolean isRunning(){return running;}
-	
 	/**
-	 * Calls every {@link com.tabuto.j2dgf.Sprite} in all CollisionDetector.
-	 * registered in this <code>CollisionManager</code>.
+	 * Start to execute all the CollisionDetector registered.
+	 * Use it to load a previously saved CollisionManager
 	 */
-public void run() 
-{
-		
-	while(running)
+	public void execute()
 	{
-			try
-			{
-				int max= CollisionsList.size();
-				for (int i=0; i<max;i++)
-					//CollisionsList.get(i).checkCollision();
-					CollisionsList.get(i).run();
-					//Thread.sleep(5);
-			}
-			catch (Exception e)
-		    { 
-				System.out.println("Collision Manager thread error: ");
-				e.printStackTrace();
-		    }
+		executor = Executors.newFixedThreadPool(10);
+		
+		int max= CollisionsList.size();
+		for (int i=0; i<max;i++)
+		executor.execute(CollisionsList.get(i));
 	}
-}
+	
 
-/**
- * Start the COllisionManager's Thread
- */
-public void start()
-{
-	t.start();
-}
+	/**
+	 * Stop the CollisionManager threads
+	 */
+	public void pause()
+	{
+	
+		int max= CollisionsList.size();
+		for (int i=0; i<max;i++)
+			//CollisionsList.get(i).checkCollision();
+			CollisionsList.get(i).pause();
+	}
 
-/**
- * Stop the CollisionManager
- */
-public void stop()
-{
-	running=false;
-}
+	/**
+	 * Resume the CollisionManager
+	 */
+	public void resume()
+	{
+		int max= CollisionsList.size();
+		for (int i=0; i<max;i++)
+			//CollisionsList.get(i).checkCollision();
+			CollisionsList.get(i).resume();
+	}
 
+	/**
+	 * Shutdown all the CollisionDetector thread
+	 */
+	public void shutdown()
+	{
+		clearCollisions();
+		executor.shutdown();
+	}
+
+	/**
+	 * Start the COllisionManager's Thread
+	 */
+	public void start()
+	{
+		try
+		{
+			int max= CollisionsList.size();
+			for (int i=0; i<max;i++)
+				//CollisionsList.get(i).checkCollision();
+				CollisionsList.get(i).run();
+				//Thread.sleep(5);
+		}
+		catch (Exception e)
+	    { 
+			System.out.println("Collision Manager error: ");
+			e.printStackTrace();
+	    }
+	}
+
+	/**
+	 * CollisionManager is observable and (at the same time) observe all the CollisionDetector
+	 * registered on it.
+	 * When a CollisionDetector execute a CollisionAction send to all his observer a message
+	 * contains the CollisionDetector class name. This message is passed at all CollisionManager 
+	 * Observers by this method.
+	 */
 	@Override
 	public void update(Observable arg0, Object arg1) {
 		

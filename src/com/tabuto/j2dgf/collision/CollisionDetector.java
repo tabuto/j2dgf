@@ -1,8 +1,8 @@
 /**
 * @author Francesco di Dio
-* Date: 23 Novembre 2010 
+* Date: 29 Novembre 2010 
 * Titolo: CollisionDetector.java
-* Versione: 0.6.5 Rev.:
+* Versione: 0.7.0 Rev.:
 */
 
 package com.tabuto.j2dgf.collision;
@@ -49,14 +49,19 @@ import com.tabuto.j2dgf.Sprite;
  * <p>
  *  When a collision is checked, the class calls
  * a {@link #CollisionAction(int, int)}method for the collided sprites
- * This class extends Observable class 'couse let its observer to know when
+ * This class extends Observable class 'couse let its observer to know when a collision occurs
+ * <p>
+ * To use this Class simply extends it and override the 
+ * {@link CollisionDetector#CollisionAction(int, int)}. After that register this class on
+ * the CollisionManager present in the Game2D.
+ * 
  * @author tabuto83
  * 
- * @version 0.6.5
- * 
+ * @version 0.7.0
  * 
  * @see CollisionManager
  * @see CollisionBoundDetector
+ * @see Game2D
  */
 
 //@SuppressWarnings("unchecked")
@@ -69,22 +74,38 @@ public class CollisionDetector extends Observable implements Serializable, Runna
 
 	/** Boolean variable. Is true if the collisionDetector checks two {@link Group}*/
 	protected boolean twoGroups;
-	/**SpriteGroups */
+	/**SpriteGroups we want to check */
 	protected Group<? extends Sprite> group1 = new Group();
+	/**SpriteGroups we want to check*/
 	protected Group<? extends Sprite> group2 = new Group();
 	
 	/**Represent the DISTANCE when the CollisionDetector calls {@link #CollisionAction(int, int)} */
 	protected double DISTANCE;
 	
+	/**
+	 * The current State of this CollisionDetector, if true the CollisionDetector scan the SpriteGroup
+	 * in search of Collision, if false, does it not!
+	 */
 	protected boolean ACTIVE;
 	
-	/** Set the DISTANCE variable @see {@link CollisionDetector#DISTANCE} */
-	public void setDistance(double d){if(DISTANCE>=0)DISTANCE = d;}
+	private transient Thread t;
 	
-	/**Get the DISTANCE variable @see {@link CollisionDetector#DISTANCE} */
-	public double getDistance(){return DISTANCE;}
+	/**
+	 * A random sleep time to let other collisionDetectors threads to execute!
+	 */
+	protected int RandomSleep;
 	
-	private String Name;
+	/**
+	 * Collision String Name is used by {@link CollisionDetector#setName()} methods to
+	 * store the Class Name that extends a CollisionDetector. 
+	 * So, if you write a MonsterVsWall class that extends CollisionDetector, 
+	 * the setName methods set Name as "MonsterVsWall". 
+	 * This name is passed to the Observers of this class when a collision occurs.
+	 * See the Java Observer and Observable Class.
+	 * 
+	 * @see Observable
+	 */
+	protected String Name;
 	/**
 	 * CONSTRUCTOR
 	 * <p>
@@ -103,6 +124,8 @@ public class CollisionDetector extends Observable implements Serializable, Runna
 		DISTANCE = 0;
 		ACTIVE=true;
 		setName();
+		t = new Thread(this); 
+		RandomSleep = (int) (Math.random()*15);
 	}
 	
 	/**
@@ -120,32 +143,26 @@ public class CollisionDetector extends Observable implements Serializable, Runna
 		DISTANCE = 0;
 		ACTIVE=true;
 		setName();
-	}
-	
+		t = new Thread(this); 
+		RandomSleep = (int) (Math.random()*15);
+	}	
 	
 	/**
-	 * Called when a collision is detected. Calls the routines to do when two Sprite of their own groups collides.
-	 * <p>
-	 * @param indexG1 <code>int</code> Hash code of first collided Sprite 
-	 * @param indexG2 <code>int</code> Hash code of second collided Sprite 
+	 * Active the CollisionDetector
 	 */
-	public void CollisionAction( int indexG1, int indexG2){};
-	
-	//public  void CollisionAction(Group<?> G1, int indexG1, 
-			                   // Group<?> G2, int indexG2){}
-	
+	public void active(){ACTIVE=true;}
 	
 	/**
 	 * Check the sprite group in search of collisions. 
 	 * When a collision occurs it calls a CollisionAction method.
 	 */
-	public void checkCollision()
+	public synchronized void checkCollision()
 	{
 		if(ACTIVE)
 		{
 			int count=1;
 			//Check if this class have to control one or two groups
-			if (twoGroups && group1.isActive() && group2.isActive() )
+			if (twoGroups && group1.isActive() && group2.isActive() && group1.size()>0 && group2.size()>0 )
 			{
 				for(int i=0; i< group1.size(); i++ )
 					for (int j=0; j < group2.size();j++)
@@ -155,30 +172,33 @@ public class CollisionDetector extends Observable implements Serializable, Runna
 						  	setChanged();
 							notifyObservers(getName());
 						  CollisionAction( i,j);
-						  
-						  int defaultSpeed1 = group1.get(i).getSpeed();
-						  int defaultSpeed2 = group2.get(j).getSpeed();
-						  group1.get(i).setSpeed(1);
-						  group2.get(j).setSpeed(1);
-						  group1.get(i).move();
-						  group2.get(j).move();
-						  group1.get(i).setSpeed(defaultSpeed1);
-						  group2.get(j).setSpeed(defaultSpeed2);
+						  try{
+							  int defaultSpeed1 = group1.get(i).getSpeed();
+							  int defaultSpeed2 = group2.get(j).getSpeed();
+							  group1.get(i).setSpeed(1);
+							  group2.get(j).setSpeed(1);
+							  group1.get(i).move();
+							 
+							  group2.get(j).move();
+							  group1.get(i).setSpeed(defaultSpeed1);
+							  group2.get(j).setSpeed(defaultSpeed2);
+							  Thread.sleep(5);
+							  }
+						  catch (InterruptedException e) 
+						  {
+								e.printStackTrace();
+							}
 						  }
 			}
 			else
-				if (group1.isActive())
+				if (group1.isActive() && group1.size()>0 && !twoGroups)
 			{   
 				for (int i=0; i< group1.size();i++)
 					for (int j=count;j<group1.size();j++)
 					{
 						if (j!=i)
-						if ( 
-							group1.get(i).isCollide( group1.get(j),DISTANCE ) 
-								
-						    )
-							
-							
+						if ( group1.get(i).isCollide( group1.get(j),DISTANCE ) )
+						
 						{  
 							if (group1.get(i).isActive() && group1.get(j).isActive() )
 							
@@ -188,18 +208,18 @@ public class CollisionDetector extends Observable implements Serializable, Runna
 							
 							int defaultSpeed1 = group1.get(i).getSpeed();
 							int defaultSpeed2 = group1.get(j).getSpeed();
-							
+							try {
+								
 							 group1.get(i).setSpeed(1);
 							 group1.get(j).setSpeed(1);
 							 group1.get(i).move();
 							 group1.get(j).move();
 							 group1.get(i).setSpeed(defaultSpeed1);
 							 group1.get(j).setSpeed(defaultSpeed2);
+							 Thread.sleep(5);
 							count++;
-							try {
-								Thread.sleep(5);
+						
 							} catch (InterruptedException e) {
-								// TODO Auto-generated catch block
 								e.printStackTrace();
 							}
 						}
@@ -210,17 +230,27 @@ public class CollisionDetector extends Observable implements Serializable, Runna
 	}
 	
 	/**
-	 * Active the COllisionDetector
+	 * Called when a collision is detected. Calls the routines to do when two Sprite of their own groups collides.
+	 * <p>
+	 * @param indexG1 <code>int</code> Hash code of first collided Sprite 
+	 * @param indexG2 <code>int</code> Hash code of second collided Sprite 
 	 */
-	public void Active(){ACTIVE=true;}
+	public void CollisionAction( int indexG1, int indexG2){};
+	
 	
 	/**
 	 * Deactive the CollisionDetector
 	 */
-	public void Deactive(){ACTIVE=false;}
+	public void deactive(){ACTIVE=false;}
 
+	/**Get the DISTANCE variable @see {@link CollisionDetector#DISTANCE} */
+	public double getDistance(){return DISTANCE;}
+	
 	/**
 	 * @return The Class name
+	 * 
+	 * @see CollisionDetector#Name
+	 * @see CollisionDetector#setName
 	 */
 	public String getName()
 	{
@@ -232,14 +262,34 @@ public class CollisionDetector extends Observable implements Serializable, Runna
 	 */
 	public boolean isActive(){return ACTIVE;}
 
+	/**
+	 * Set the ACTIVE state of this class as {@code false}
+	 */
+	public void pause()
+	{
+		ACTIVE=false;
+	}
+	
+	/**
+	 * Set the ACTIVE state of this class as {@code true}
+	 */
+	public void resume()
+	{
+		ACTIVE=true;
+	}
+	
+	/**
+	 * CollisionDetector Thread task. Simply {@link CollisionDetector#checkCollision()}
+	 * when it is ACTIVE
+	 */
 	@Override
 	public void run() {
-		if(ACTIVE)
+		while(ACTIVE)
 		{
 			try
 			{
 				checkCollision();
-				//Thread.sleep(5);
+				Thread.sleep(RandomSleep);
 			}
 			catch (Exception e)
 		      { 
@@ -250,13 +300,34 @@ public class CollisionDetector extends Observable implements Serializable, Runna
 		
 	}
 	
+	/** Set the DISTANCE variable 
+	 * @see CollisionDetector#DISTANCE
+	 */
+	public void setDistance(double d){if(DISTANCE>=0)DISTANCE = d;}
+	
+	/**
+	 * Collision String Name is used by {@link CollisionDetector#setName()} methods to
+	 * store the Class Name that extends a CollisionDetector. 
+	 * So, if you write a MonsterVsWall class that extends CollisionDetector, 
+	 * the setName methods set Name as "MonsterVsWall". 
+	 * This name is passed to the Observers of this class when a collision occurs.
+	 * See the Java Observer and Observable Class.
+	 */
 	public void setName()
 	{
 		String t = this.getClass().getCanonicalName();
 		Name=t.substring( t.lastIndexOf('.')+1 );
 	}
 
+	/**
+	 * Start the CollisionDetector Thread
+	 */
+	public void start()
+	{
+		t.start();
+	}
 	
+
 
 	
 }

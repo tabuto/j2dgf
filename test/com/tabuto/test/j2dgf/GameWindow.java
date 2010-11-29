@@ -1,8 +1,8 @@
 /**
 * @author Francesco di Dio
-* Date: 05 Novembre 2010 18.14
+* Date: 29 Novembre 2010 18.14
 * Titolo: GameWindow.java
-* Versione: 0.5.2 Rev.:
+* Versione: 0.5.3 Rev.:
 */
 
 package com.tabuto.test.j2dgf;
@@ -12,8 +12,8 @@ import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
-
 import java.awt.image.BufferStrategy;
+import javax.swing.JFileChooser;
 import javax.swing.JFrame;
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
@@ -23,7 +23,6 @@ import javax.swing.JScrollPane;
 import javax.swing.KeyStroke;
 import javax.swing.WindowConstants;
 
-
 import com.tabuto.test.j2dgf.MyCanvas;
 
 public class GameWindow extends JFrame {
@@ -32,9 +31,7 @@ public class GameWindow extends JFrame {
 	BufferStrategy bs;      //BufferStrategy
     int W=1024,H=668;       //Window Frame Size
     Dimension d;            //Dimension of window size
-    private static final String version =" v.0.5.1";
-    boolean PLAY = true;
-    boolean STOP = false;
+    private static final String version =" v.0.5.3";
     
     //GUI PANELS AND ELEMENTS
     MyCanvas panel;
@@ -49,11 +46,14 @@ public class GameWindow extends JFrame {
     
     public GameWindow()
     {
+    	//Init the GUI component
     	d = new Dimension(W,H);
     	cp_west = new MyControlLeftPanel(d);
     	cp_east = new MyControlRightPanel(d);
+    	//Build New Game
     	Game = new GameTest(d);
-    	panel = new MyCanvas(Game); //Declare the DrawingPanel
+    	//Build new Canvas
+    	panel = new MyCanvas(d); //Declare the DrawingPanel
     	scroller = new JScrollPane(panel);
     	bottom = new MyBottomPanel(d);
     	j2dmenubar = new JMenuBar();
@@ -74,17 +74,19 @@ public class GameWindow extends JFrame {
 		this.setJMenuBar(j2dmenubar);
         pack();        
         this.setVisible(true);
-        this.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);       
+        this.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);  
+        
+        //Init the Game 
+        Game.initGame();
     }
    
     
     //Start the game
     public void startNow()
     {
-    	if(!STOP)
-        Game.initGame();
-		
-    	while(PLAY){ panel.run(); };   
+    	//GameLoop
+    	//While game is active, panel drawGame
+    	while(Game.isActive()){ panel.run(Game); };   
     }
     
     
@@ -100,6 +102,48 @@ public class GameWindow extends JFrame {
         JMenu filemenu = new JMenu("File");
         filemenu.setMnemonic('F');
         		//ITEMS
+        				//OPEN
+				JMenuItem open = new JMenuItem("Open");
+				open.setMnemonic('O');
+				open.addActionListener(new ActionListener()
+				{
+					public void actionPerformed( ActionEvent action )
+						{
+						GameWindow.this.Game.deactivate();
+			            JFileChooser fileChooser = new JFileChooser();
+			            int n = fileChooser.showOpenDialog(GameWindow.this);
+			            if (n == JFileChooser.APPROVE_OPTION) 
+			            	{	
+			        		  GameWindow.this.Game = 
+			        			  (GameTest) panel.loadGame( 
+			        					  fileChooser.getSelectedFile().getAbsolutePath()
+			        					  );
+			            	}
+						}
+				});
+				filemenu.add( open );
+
+				//Save
+				JMenuItem save = new JMenuItem("Save");
+				save.setMnemonic('S');
+				save.addActionListener(new ActionListener()
+				{
+					public void actionPerformed( ActionEvent action )
+						{
+							//new SaveSimChooser();
+							JFileChooser fileChooser = new JFileChooser();
+							 int n = fileChooser.showSaveDialog(GameWindow.this);
+					            if (n == JFileChooser.APPROVE_OPTION) 
+					            	{	
+					        		  GameWindow.this.panel.saveGame(
+					        	GameWindow.this.Game, 
+					        	fileChooser.getSelectedFile().getAbsolutePath()
+					        		  								);
+					            	}
+						}
+				});
+				filemenu.add( save );
+				
         				//EXIT
         		JMenuItem exit = new JMenuItem("Exit");
         		exit.setMnemonic('Q');
@@ -139,7 +183,7 @@ public class GameWindow extends JFrame {
         	step.addActionListener(new ActionListener()
 			{
     			public void actionPerformed( ActionEvent action )
-					{panel.Step();}
+					{panel.Step(Game);}
 			});
         	actionmenu.add(step);
         	
@@ -164,8 +208,7 @@ public class GameWindow extends JFrame {
         									{
         	      public void actionPerformed( ActionEvent action )
         	      								{
-        										Game.deleteStuff();
-        										Game.initGame();
+        										Game.reset();
         	      								}
         									});
         	actionmenu.add(reset);
@@ -184,7 +227,7 @@ public class GameWindow extends JFrame {
       	      								{
       	    	  		JOptionPane.showMessageDialog(null, 
       	    	  				"JUniverse "+ version+" is written by tabuto83" 
-      	    	  				+"\n Using J2DGF v.0.6.2"
+      	    	  				+"\n Using J2DGF v.0.7.0"
       	    	  				+"\nGet more information at: http://code.google.com/p/j2dgf/", 
       	    	  				"About", 
       	    	  				JOptionPane.PLAIN_MESSAGE);
@@ -212,5 +255,7 @@ public class GameWindow extends JFrame {
         this.getContentPane().add( cp_east, BorderLayout.LINE_END);
         this.getContentPane().add( bottom, BorderLayout.PAGE_END);
     }
+    
+
     
 }

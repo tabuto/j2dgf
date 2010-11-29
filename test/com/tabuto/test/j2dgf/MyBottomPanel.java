@@ -25,7 +25,7 @@ public class MyBottomPanel extends J2DBottomPanel {
 	protected void addContent()
 	{
 			JLabel StateBar = new JLabel();
-			StateBar.setText("  JUniverse v.0.5.0 by Tabuto83");
+			StateBar.setText("  JUniverse v.0.7.0 by Tabuto83");
 			this.add(StateBar);
 	}
 	

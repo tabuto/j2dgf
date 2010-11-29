@@ -1,4 +1,14 @@
 Changelog
+J2DGF v.0.7.0
+* J2DCanvasPanel can now save and load Game;
+* CollisionManager is a Thread executor, to execute a CollisionDetector thread pool;
+* Game2D is an Observable Class;
+* Improve CollisionDetector Performance using Thread;
+* Improve Game performance;
+* Several API added: see Doc for information
+* Add a PDF JavaDoc for Framework API
+
+
 J2DGF v.0.6.5
 * Sprite implements Observable
 * CollisionDetector implements Observable and return to its Observer (CollisionMAnager) 

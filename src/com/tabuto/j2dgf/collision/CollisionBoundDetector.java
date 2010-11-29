@@ -1,8 +1,8 @@
 /**
 * @author Francesco di Dio
-* Date: 19 Novembre 2010 
+* Date: 29 Novembre 2010 
 * Titolo: CollisionBoundDetector.java
-* Versione: 0.6.5 Rev.:
+* Versione: 0.7.0 Rev.:
 */
 
 package com.tabuto.j2dgf.collision;
@@ -12,7 +12,6 @@ import java.io.Serializable;
 
 import com.tabuto.j2dgf.Group;
 import com.tabuto.j2dgf.Sprite;
-//import com.tabuto.j2dgf.SpriteGroup;
 
 
 
@@ -52,12 +51,11 @@ import com.tabuto.j2dgf.Sprite;
  * CollisionManager CM = new CollisionManager();
  * CM.add(CBD);
  * 
- * CollisionManager.runCollisionManager();
  * </pre>
  * 
  * @author tabuto83
  * 
- * @version 0.6.3
+ * @version 0.7.0
  * 
  * @see CollisionManager
  * @see CollisionDetector
@@ -71,18 +69,17 @@ public class CollisionBoundDetector extends CollisionDetector implements Seriali
 	 */
 	private static final long serialVersionUID = 6755271373855764312L;
 	/**
-	 * 
-	 */
-	//private static final long serialVersionUID = 6755271373855764312L;
-	/**
 	 * Dimension of the playfield
 	 */
 private Dimension dim = new Dimension();
 
+	/**
+	 * Edges type
+	 */
 private enum Edges  {SOUTH, NORTH, EAST, WEST,NULL};
 
 /**
- * An <code>enum</code> for Use a Collision Bound ruoutines 
+ * An <code>enum</code> for Use a Collision Bound routines 
  */
 private enum CollisionsBoundType {NULL, REFLECTION, THROUGH, BOUNCE};
 
@@ -162,7 +159,6 @@ private CollisionsBoundType collisionType = CollisionsBoundType.NULL;
 	{
 
   	    Edges edge=Edges.NULL;
-  	   // int wall;
   	    if (s.getX() - s.getWest() < 0  ) edge=Edges.WEST; //wall=3;
 	    if (s.getX() + s.getEast() > this.dim.width) edge = Edges.EAST;
 	    if (s.getY() - s.getNorth() < 0 ) edge = Edges.NORTH;
@@ -208,7 +204,6 @@ private CollisionsBoundType collisionType = CollisionsBoundType.NULL;
 	if ( s.getY()  > this.dim.height  ) s.setY( 0 + s.getNorth() );
 	  
 	}
-	
 
 	/**
 	 * NOT YET IMPLEMENTED
