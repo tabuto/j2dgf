@@ -530,10 +530,12 @@ public abstract class Sprite extends Observable implements Drawable, Serializabl
 	   */
 	  public void setSpeed(int speed)
 	  {
-		  if (speed>=0 && speed<=100)
-			  this.speed=speed;
-		  else
-			  this.speed=DefaultSpeed;
+		  if (speed<0) 
+			   	speed=0;
+		  if (speed>100)
+			  	speed=100;
+		  
+		  this.speed=speed;
 		  
 		  vector.setNewModule(this.speed);
 	  }
