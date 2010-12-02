@@ -55,7 +55,7 @@ public class MyCanvas extends J2DCanvasPanel{
 	   */
 	  public void Step(Game2D Game)
 	  {
-		  //TODO: fix this code
+
 		  drawStuff(Game);   // render to a buffer
 	       panelDraw();  // draw buffer to screen
 	  }

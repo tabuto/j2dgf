@@ -1,4 +1,9 @@
 Changelog
+
+JDGF v.0.7.1
+Sprite Speed fix SetSPeed bug
+Collision fix IndexOutOfBound exception Bug
+
 J2DGF v.0.7.0
 * J2DCanvasPanel can now save and load Game;
 * CollisionManager is a Thread executor, to execute a CollisionDetector thread pool;

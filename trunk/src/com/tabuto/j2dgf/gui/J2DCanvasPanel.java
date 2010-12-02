@@ -70,7 +70,7 @@ import com.tabuto.j2dgf.Game2D;
  * @see Group
  */
 
-//TODO: Load and save Game are methods of J2DCanvasPanel
+
 public class J2DCanvasPanel extends JPanel implements  Observer {
 
 	/**

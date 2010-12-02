@@ -163,71 +163,84 @@ public class CollisionDetector extends Observable implements Serializable, Runna
 			int count=1;
 			//Check if this class have to control one or two groups
 			if (twoGroups && group1.isActive() && group2.isActive() && group1.size()>0 && group2.size()>0 )
-			{
-				for(int i=0; i< group1.size(); i++ )
-					for (int j=0; j < group2.size();j++)
-					  if ( group1.get(i).isCollide(group2.get(j),DISTANCE ) )
+				{
+					group1.trimToSize();
+					group2.trimToSize();
+					for(int i=0; i< group1.size(); i++ )
+						for (int j=0; j < group2.size();j++)
+							try{
+								if ( group1.get(i).isCollide(group2.get(j),DISTANCE ) )
+								{
+								 setChanged();
+								 notifyObservers(getName());
+								 CollisionAction( i,j);
 						  
-					     {
-						  	setChanged();
-							notifyObservers(getName());
-						  CollisionAction( i,j);
-						  try{
-							  int defaultSpeed1 = group1.get(i).getSpeed();
-							  int defaultSpeed2 = group2.get(j).getSpeed();
-							  group1.get(i).setSpeed(1);
-							  group2.get(j).setSpeed(1);
-							  group1.get(i).move();
-							 
-							  group2.get(j).move();
-							  group1.get(i).setSpeed(defaultSpeed1);
-							  group2.get(j).setSpeed(defaultSpeed2);
-							  Thread.sleep(5);
-							  }
+								  int defaultSpeed1 = group1.get(i).getSpeed();
+								  int defaultSpeed2 = group2.get(j).getSpeed();
+								  group1.get(i).setSpeed(1);
+								  group2.get(j).setSpeed(1);
+								  group1.get(i).move();
+								 
+								  group2.get(j).move();
+								  group1.get(i).setSpeed(defaultSpeed1);
+								  group2.get(j).setSpeed(defaultSpeed2);
+								  Thread.sleep(5);
+								}//ENDIF
+							}//try
+			
 						  catch (InterruptedException e) 
-						  {
-								e.printStackTrace();
-							}
-						  }
-			}
+							  {
+									//e.printStackTrace();
+							  		continue;
+							  }
+						  catch (IndexOutOfBoundsException e)
+							  {
+								continue;
+							  }	 
+				} //ENDIF
 			else
 				if (group1.isActive() && group1.size()>0 && !twoGroups)
-			{   
-				for (int i=0; i< group1.size();i++)
-					for (int j=count;j<group1.size();j++)
-					{
-						if (j!=i)
-						if ( group1.get(i).isCollide( group1.get(j),DISTANCE ) )
-						
-						{  
-							if (group1.get(i).isActive() && group1.get(j).isActive() )
-							
-							setChanged();
-							notifyObservers(getName());
-							CollisionAction(i, j );
-							
-							int defaultSpeed1 = group1.get(i).getSpeed();
-							int defaultSpeed2 = group1.get(j).getSpeed();
-							try {
-								
-							 group1.get(i).setSpeed(1);
-							 group1.get(j).setSpeed(1);
-							 group1.get(i).move();
-							 group1.get(j).move();
-							 group1.get(i).setSpeed(defaultSpeed1);
-							 group1.get(j).setSpeed(defaultSpeed2);
-							 Thread.sleep(5);
-							count++;
-						
-							} catch (InterruptedException e) {
-								e.printStackTrace();
+				{   
+					group1.trimToSize();
+					for (int i=0; i< group1.size();i++)
+						for (int j=count;j<group1.size();j++)
+							try{
+									if (j!=i)
+										if ( group1.get(i).isCollide( group1.get(j),DISTANCE ) ) 
+											if (group1.get(i).isActive() && group1.get(j).isActive() )
+											{
+												setChanged();
+												notifyObservers(getName());
+												CollisionAction(i, j );
+												
+												int defaultSpeed1 = group1.get(i).getSpeed();
+												int defaultSpeed2 = group1.get(j).getSpeed();
+													
+												 group1.get(i).setSpeed(1);
+												 group1.get(j).setSpeed(1);
+												 group1.get(i).move();
+												 group1.get(j).move();
+												 group1.get(i).setSpeed(defaultSpeed1);
+												 group1.get(j).setSpeed(defaultSpeed2);
+												 Thread.sleep(5);
+												count++;	
+											  }
+							}//endTRY
+							catch (InterruptedException e) 
+							{
+								//e.printStackTrace();
+						  		continue;
 							}
-						}
-					}
-			}
-		}
+							catch (IndexOutOfBoundsException e)
+							{
+								continue;
+							}
+					}//END IF
+					
+			}//endIF
+		}//endMethod
 		
-	}
+	
 	
 	/**
 	 * Called when a collision is detected. Calls the routines to do when two Sprite of their own groups collides.

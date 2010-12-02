@@ -109,7 +109,7 @@ private CollisionsBoundType collisionType = CollisionsBoundType.NULL;
 	 * @see Sprite
 	 * @see CollisionDetector
 	 */
-	public void checkCollision()
+	public void checkCollision() throws IndexOutOfBoundsException
 	{
 		
 		for (int i=0; i< group1.size();i++)
