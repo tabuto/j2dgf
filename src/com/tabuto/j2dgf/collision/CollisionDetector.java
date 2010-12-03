@@ -281,6 +281,8 @@ public class CollisionDetector extends Observable implements Serializable, Runna
 	public void pause()
 	{
 		ACTIVE=false;
+			//t.interrupt();
+		
 	}
 	
 	/**
@@ -289,6 +291,7 @@ public class CollisionDetector extends Observable implements Serializable, Runna
 	public void resume()
 	{
 		ACTIVE=true;
+		
 	}
 	
 	/**
