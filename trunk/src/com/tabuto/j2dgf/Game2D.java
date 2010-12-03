@@ -116,7 +116,7 @@ public abstract class Game2D extends Observable implements Serializable{
 	public void activate()
 	{
 		ACTIVE=true;
-		cm.resume();
+		//cm.resume();
 	}
 	
 	/**
@@ -125,7 +125,7 @@ public abstract class Game2D extends Observable implements Serializable{
 	public void deactivate()
 	{
 		ACTIVE=false;
-		cm.pause();
+		//cm.pause();
 	}
 	
 	 /**

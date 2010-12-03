@@ -79,13 +79,11 @@ public class GameTest extends Game2D{
 	@Override
 	public void drawStuff(Graphics g) {
 		 //Draw Object, move object and check collisions using CollisionManager
-    	for(int i=0;i<N_Particles;i++)
-          {
+    	
     		//Moving the sprite
-    		alfaGroup.get(i).move();
+    		alfaGroup.move();
     		 //Draw the Sprites
-    		alfaGroup.get(i).drawMe(g);
-    	  }
+    		alfaGroup.draw(g); 
 		
 	}
 
