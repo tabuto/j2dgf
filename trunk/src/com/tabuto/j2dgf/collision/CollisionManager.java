@@ -2,7 +2,7 @@
 * @author Francesco di Dio
 * Date: 29 Novembre 2010
 * Titolo: CollisionManager.java
-* Versione: 0.7.0 Rev.:
+* Versione: 0.7.2 Rev.:
 */
 
 /*
@@ -192,7 +192,7 @@ public class CollisionManager extends Observable implements Serializable, Observ
 		}
 		catch (Exception e)
 	    { 
-			System.out.println("Collision Manager error: ");
+			//System.out.println("Collision Manager error: ");
 			e.printStackTrace();
 	    }
 	}

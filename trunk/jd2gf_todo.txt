@@ -1,0 +1,34 @@
+J2DGF
+
+TODO:
+* PEr la classe sprite aggiungi il tipo enum per tipizzare le costanti : NORTH, SOUTH,ecc..
+come specificato nelle pagine 594 e seguenti del libro OOrsio&Java5.pdf
+
+* Controllo versione prima dell'esecuzione:
+	Properties sProp = java.lang.System.getProperties();
+	String version = sProp.getProperty("java.version");
+	sVersion = sVersion.substring(0,3);
+	Float f = Float.valueOf(sVersion);
+		if (f.floatValue() > (float) 1.6)
+			OK....
+		else
+			NO_OK
+
+DO!
+Interfaccia grafica con pannelli multipli;
+CanvasPanel Scrollable
+
+DO!
+todo:
+In vettore riorganizza metodi:
+	Aggiungi metodi pubblici:  equalsTo, setNewComponent, setNewComponentX, setNewComponentY, setNewDirectionDegree, setNewDirectionRadians, 
+				  setNewEnd, setNewModule, setNewOrigin,  sum, toString.
+
+	Modifica costruttori in modo da renderli consistenti a partire dai parametri che hanno. USa dove necessario dei metodi privati;
+
+
+
+Ogni sprite un thread oppure i collision detector sono thread? o il collision manager? VAluta e implementa!
+Ogni oggetto: Sprite, vettore, punto, dovrebbe avere un metodo equalsTo() che restituisce true o false confrontando alcune delle variabili della classe;
+**DONE!** In Vettore (ma anche in altre classi) utilizza la Cross Reference tra i costruttori come indicato a pp. 84/231 di JavaManualeCompleto.pdf
+
