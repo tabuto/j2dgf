@@ -2,7 +2,7 @@
 * @author Francesco di Dio
 * Date: 29 Novembre 2010 
 * Titolo: CollisionDetector.java
-* Versione: 0.7.0 Rev.:
+* Versione: 0.7.2 Rev.:
 */
 
 package com.tabuto.j2dgf.collision;
@@ -309,7 +309,7 @@ public class CollisionDetector extends Observable implements Serializable, Runna
 			}
 			catch (Exception e)
 		      { 
-				System.out.println("Collision Manager thread error: ");
+				System.out.println("Collision Detector thread error: ");
 				e.printStackTrace();
 		      }
 		}

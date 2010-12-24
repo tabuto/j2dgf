@@ -2,7 +2,7 @@
 * @author Francesco di Dio
 * Date: 29 Novembre 2010 18.14
 * Titolo: J2DCanvasPanel.java
-* Versione: 0.7.0 Rev.:
+* Versione: 0.7.2 Rev.:
 */
 
 
@@ -62,7 +62,7 @@ import com.tabuto.j2dgf.Game2D;
  * 
  * @author tabuto83
  *
- * @version 0.7.0
+ * @version 0.7.2
  * 
  * @see Game2D
  * @see CollisionDetector
@@ -220,7 +220,7 @@ public class J2DCanvasPanel extends JPanel implements  Observer {
 	  /**
 	   * Flush the content of the BufferImage on the Panel
 	   */
-	  protected void panelDraw()
+	  public void panelDraw()
 	  {
 		  Graphics g;
 	      try {

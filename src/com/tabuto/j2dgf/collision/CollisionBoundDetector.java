@@ -2,7 +2,7 @@
 * @author Francesco di Dio
 * Date: 29 Novembre 2010 
 * Titolo: CollisionBoundDetector.java
-* Versione: 0.7.0 Rev.:
+* Versione: 0.7.2 Rev.:
 */
 
 package com.tabuto.j2dgf.collision;
@@ -109,21 +109,28 @@ private CollisionsBoundType collisionType = CollisionsBoundType.NULL;
 	 * @see Sprite
 	 * @see CollisionDetector
 	 */
-	public void checkCollision() throws IndexOutOfBoundsException
+	public void checkCollision() 
 	{
 		
 		for (int i=0; i< group1.size();i++)
 			{
-			if (group1.get(i).isActive())
-			 if (  group1.get(i).getX() - group1.get(i).getWest() < 0 || 
-					 group1.get(i).getX() + group1.get(i).getEast() > this.dim.width ||
-					   group1.get(i).getY() - group1.get(i).getNorth() < 0 ||
-					     group1.get(i).getY() + group1.get(i).getSouth() > this.dim.height
-				)
+			try{
+				if (group1.get(i).isActive())
+					 if (  group1.get(i).getX() - group1.get(i).getWest() < 0 || 
+							 group1.get(i).getX() + group1.get(i).getEast() > this.dim.width ||
+							   group1.get(i).getY() - group1.get(i).getNorth() < 0 ||
+							     group1.get(i).getY() + group1.get(i).getSouth() > this.dim.height
+				         )
 				 {
-				 this.CollisionAction(group1.get(i) );
-				 group1.get(i).move();
+						 this.CollisionAction(group1.get(i) );
+						 group1.get(i).move();
 				 }
+				}
+		
+	catch (IndexOutOfBoundsException e)
+		{
+			continue;
+		}
 			}
 	}
 	

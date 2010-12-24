@@ -56,6 +56,7 @@ public class Particle extends Sprite{
 	{
 		 g.setColor( this.getColor() );
 	     g.fillOval((int)this.getX() - this.radius,(int) this.getY() - this.radius, 2*this.radius,2*this.radius);
+	
 	}
 	
 	public void setRadius(int r)
