@@ -212,7 +212,7 @@ public abstract class Game2D extends Observable implements Serializable{
 	/**
 	 * @return the Game's Saved files Path 
 	 */
-	public String getPATH() {
+	public String getPath() {
 		return PATH;
 	}
 
@@ -220,7 +220,7 @@ public abstract class Game2D extends Observable implements Serializable{
 	/**
 	 * @param pATH the Game's files pATH to set
 	 */
-	public void setPATH(String pATH) {
+	public void setPath(String pATH) {
 		PATH = pATH;
 	}
 

@@ -2,6 +2,7 @@ Changelog
 
 J2DGF v.0.7.2
 J2DCanvasPanel: set public panelDrawMethod
+Game2D: fix set and getPath methods
 
 JDGF v.0.7.1
 Sprite Speed fix SetSPeed bug
