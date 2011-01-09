@@ -1,5 +1,9 @@
 Changelog
 
+J2DGF v.0.7.3
+Add TimeCollisionAction abstract class to perform collision action every time check
+Add setPanelWidth/Height methods into J2DControlPanel
+
 J2DGF v.0.7.2
 J2DCanvasPanel: set public panelDrawMethod
 Game2D: fix set and getPath methods

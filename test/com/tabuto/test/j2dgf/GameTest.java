@@ -34,8 +34,10 @@ import java.awt.Dimension;
 import java.awt.Graphics;
 import com.tabuto.j2dgf.Game2D;
 import com.tabuto.j2dgf.Group;
+import com.tabuto.j2dgf.Sprite;
 import com.tabuto.j2dgf.collision.CollisionBoundDetector;
 import com.tabuto.j2dgf.collision.CollisionDetector;
+import com.tabuto.j2dgf.collision.TimeCollisionDetector;
 
 
 public class GameTest extends Game2D{
@@ -53,6 +55,9 @@ public class GameTest extends Game2D{
 	//Group<Particle> betaGroup= new Group<Particle>("Beta");
 	//Particle collision check collision between particles
 	public ParticleCollision pCollision;
+	
+	public TimeParticleCollision tCollision;
+	
 	//CollisionBoundDetector check collision with the boundary
 	public CollisionBoundDetector cbd;
 	
@@ -93,6 +98,7 @@ public class GameTest extends Game2D{
 		alfaGroup.setGroupName("alfa");
 		//Init Particle Collision
 		pCollision = new ParticleCollision(alfaGroup);
+		tCollision = new TimeParticleCollision(alfaGroup, 2000);
 		//Set the distance to zero
 		pCollision.setDistance(0);
 		//Init CollisionBoundDetector
@@ -105,6 +111,7 @@ public class GameTest extends Game2D{
 		//The collision Manager automatical start they
 		cm.addCollision(cbd);
 		cm.addCollision(pCollision);
+		cm.addCollision(tCollision);
 		
 		//Build new Particle
 		for (int i = 0; i< ( N_Particles );i++)
@@ -158,5 +165,32 @@ public class GameTest extends Game2D{
 					p1.setRadius( p2.getRadius());
 			  } 
 		}
+	
+	public class TimeParticleCollision extends TimeCollisionDetector
+	{
+
+		/**
+		 * 
+		 */
+		private static final long serialVersionUID = 1L;
+
+		public TimeParticleCollision(Group<Particle> pg1, int time) {
+			super(pg1, time);
+			
+		}
+
+		@Override
+		public void CollisionAction(int i) {
+			
+			Particle p1 = (Particle) this.group1.get(i); 
+			
+			p1.setColor( (int) (Math.random()*254 ), 
+					(int) (Math.random()*254 ), 
+					(int) (Math.random()*254 ));
+			
+			
+		}
+		
+	}
 
 }

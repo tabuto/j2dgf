@@ -52,6 +52,11 @@ public class Particle extends Sprite{
 	
 	public Color getColor(){return c;}
 	
+	public void setColor( int r, int g, int b)
+	{
+		c = new Color(r,g,b);
+	}
+	
 	public void ThisIsMe(Graphics g)
 	{
 		 g.setColor( this.getColor() );
