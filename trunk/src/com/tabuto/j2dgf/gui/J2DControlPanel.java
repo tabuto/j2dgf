@@ -144,6 +144,24 @@ public abstract class J2DControlPanel extends JPanel{
 		 this.add(Test,BorderLayout.PAGE_START);
 		 */
 		 
+	 /**
+	  * Set the actual Panel height
+	  */
+	 protected void setPanelHeight(int height)
+	 {
+		 HEIGHT = height;
+		 PreferredSize.height = HEIGHT;
+		 setSize(PreferredSize);
+	 }
 	 
+	 /**
+	  * Set the actual Panel iodth
+	  */
+	 protected void setPanelWidth(int width)
+	 {
+		 WIDTH = width;
+		 PreferredSize.width = WIDTH;
+		 setSize(PreferredSize);
+	 }
 
 }
