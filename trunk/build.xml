@@ -1,0 +1,106 @@
+<?xml version="1.0" encoding="UTF-8"?>
+	<project name="J2DGF" basedir="." default="default">
+
+	<property name="build" location="build" />
+	<property name="srcfolder" value="src" />
+	<property name="code.sources" location="${srcfolder}" />
+	<property name="code.classes" location="${build}/classes" />
+	<property name="classes.dir" location="${build}/classes" />
+	<property name="dist.dir" location="./jar" />
+	<property name="doc.dir" location="./doc" />
+	<property name="proj.dir" location="." />
+		
+	
+	<dirset id="srcdir" dir="." includes="src" />
+	<path id="lib.path"><pathelement path="${code.classes}" /></path>
+
+	<target name="compile">
+		<mkdir dir="${code.classes}" />
+		<javac srcdir="${code.sources}" destdir="${code.classes}"
+		classpathref="lib.path" target="1.6" encoding="utf-8" />
+	</target>
+	<target name="default" >
+		<antcall target="compile" />
+	</target>
+		
+		<target name="clean">
+				<echo message=" --- Running target CLEAN --- " />
+				<delete dir="${classes.dir}" />
+				<mkdir dir="${classes.dir}" />
+				<delete dir="${dist.dir}" />
+				<mkdir dir="${dist.dir}" />
+		</target>
+	
+		<target name="jar-binary" depends="compile">
+				<echo message=" --- Running target JAR --- " />
+				<echo message="Compila e pacchettizza il progetto J2DGF" />
+				<jar destfile="${dist.dir}/J2DGF_bin.jar" basedir="${classes.dir}" includes="**">
+					<manifest>
+						<attribute name="Created-By" value="Francesco di Dio" />
+					</manifest>
+				</jar>
+		</target>
+		
+		<target name="jar-all" depends="compile">
+						<echo message=" --- Running target JAR --- " />
+						<echo message="Compila e pacchettizza il progetto J2DGF con Sorgenti e Licensa" />
+						<jar destfile="${dist.dir}/J2DGF.jar">
+							<fileset dir="${classes.dir}"/>
+							<zipfileset dir="${srcfolder}" prefix="src"/>
+							<zipfileset dir="${doc.dir}" prefix="doc"/>
+							<fileset dir="${proj.dir}" includes="changelog.txt,License,version" />
+							
+							<manifest>
+								<attribute name="Created-By" value="Francesco di Dio" />
+							</manifest>
+						</jar>
+		 </target>
+		
+		<target name="jar-binary-release" depends="jar-binary">
+				<echo message="****************************************************************************" />
+				<echo message="*                                                                          *" />
+				<echo message="* 							Release Version of J2DGF					  *" />
+				<echo message="*                                                                          *" />
+				<echo message="****************************************************************************" />
+				<property name="version.number" value="1"/>
+				<buildnumber file="version" />
+				<echo message="--- Running target WAR-VERSION ---" />
+				<echo message="Compila e pacchettizza il progetto J2DGF - versione: ${version.number}.${build.number}" />
+					<fileset dir="${build.dir}" />
+				<jar destfile="${dist.dir}/J2DGF_bin.jar" basedir="${classes.dir}" includes="**">
+					<manifest>
+						<attribute name="Class-Path" value="${manifest.classpath}" />
+						<attribute name="Created-By" value="Francesco di Dio" />
+						<attribute name="Build-Date" value="${DSTAMP}-${TSTAMP}" />
+						<attribute name="Implementation-Version" value="${version.number}.${build.number}"/>
+					</manifest>
+				</jar>
+			</target>
+		
+		<target name="jar-all-release" depends="jar-all">
+						<echo message="****************************************************************************" />
+						<echo message="*                                                                          *" />
+						<echo message="* 							Release Version of J2DGF					  *" />
+						<echo message="*                                                                          *" />
+						<echo message="****************************************************************************" />
+						<property name="version.number" value="1"/>
+						<buildnumber file="version" />
+						<echo message="--- Running target WAR-VERSION ---" />
+						<echo message="Compila e pacchettizza il progetto J2DGF - versione: ${version.number}.${build.number}" />
+						<jar destfile="${dist.dir}/J2DGF.jar" basedir="${classes.dir}" includes="**">
+							<fileset dir="${classes.dir}"/>
+							<zipfileset dir="${srcfolder}" prefix="src"/>
+						    <zipfileset dir="${doc.dir}" prefix="doc"/>
+						   <fileset dir="${proj.dir}" includes="changelog.txt,License,version" />
+						
+							
+							<manifest>
+								<attribute name="Class-Path" value="${manifest.classpath}" />
+								<attribute name="Created-By" value="Francesco di Dio" />
+								<attribute name="Build-Date" value="${DSTAMP}-${TSTAMP}" />
+								<attribute name="Implementation-Version" value="${version.number}.${build.number}"/>
+							</manifest>
+						</jar>
+					</target>
+		
+</project>
