@@ -1,0 +1,74 @@
+# Changelog #
+
+## J2DGF v.0.7.0 ##
+
+  * J2DCanvasPanel can now save and load Game;
+  * CollisionManager is a Thread executor, to execute a CollisionDetector thread pool;
+  * Game2D is an Observable Class;
+  * Improve CollisionDetector Performance using Thread;
+  * Improve Game performance;
+  * Several API added: see Doc for information
+  * Add a PDF JavaDoc for Framework API
+
+## J2DGF v.0.6.5 ##
+
+  * Sprite implements Observable
+  * CollisionDetector implements Observable and return to its Observer (CollisionMAnager) a message with the Class name. So the Class ParticleCollision send a message to CollisionMAnager using a String="ParticleCollision"
+  * CollisionManager now observe its CollisionDetector, and is observable by other sending the messages sends by its CollisionDetector.
+  * CollisionMAnager is a Thread
+  * New CLass GAME to wrap entire JD2GF components, the J2DCanvas simply instanciate new Game
+  * J2DCanvasPanel is now simple a container of a Game class and his aim is just to draw the Game Sprites
+
+## J2DGF v.0.6.4 ##
+
+  * CollisionAction can be Active or deactive
+  * Sprite Speed Parameter value changed
+  * Group add remove routine into move() method
+
+## J2DGF v.0.6.3 ##
+
+  * Sprite class:add getDimension() method
+  * Group class: remove Annotation SuppressWaring Serial
+  * COllisionBound Class: add todo annotation
+  * J2DCanvasPanel: fix the print of stackTrace in catch exception!
+  * test package: add Annotation SupppressWarings
+
+## J2DGF v.0.6.2 ##
+
+  * Group class is now serializable deleting the SerialVersion ID;
+  * /test/Gamewindow class get more information in 'About' menù;
+
+## J2DGF v.0.6.1 ##
+
+  * ALL: all class now implements Serializable interface to save Game objects
+
+## J2DGF v.0.6 ##
+
+  * CollisionBoundDetector: fix a  Collision Bound Bug!
+  * ALL: Use enum type when possible
+  * Group: New Class Group manage generic classes that extends Sprite!
+  * ALL: Improve All Annotation
+  * Sprite: add moveTo(Point p) and moveTo(Sprite s) methods;
+  * Sprite: now Sprite.Vector is protected;
+  * Vector.java 0.2.1: fix SetDirectionMethod
+  * Point.java 0.1.1: now implements Serializable interface
+
+## J2DGF v.0.5 ##
+  * ALL: use Java/Swing instead of AWT;
+  * ALL: classes use now Graphics instead of Graphics2D;
+  * com.tabuto.j2dgf.gui: package contains a utilities classes to create new GUI.
+  * NEW: J2DCanvasPanel: instead of DrawingPanel, this class use a Swing/JPanel and a personal DoubleBuffered Animation;
+  * J2DCanvasPanel: implements Runnable interface, and methods to start, stop and stap animation;
+  * NEW: J2DControlPanel and J2DBottomPanel: as abstract class to add in the JFRame window more ControlPanel
+  * WindowGame: class in the /test package use now swing component;
+  * windowGame: use a JScrollPane to implements a Scrollable J2DCanvasPanel;
+
+## J2DGF v.0.4 ##
+
+  * Sprite can be drawing as a asimetrical object, using the "NSEW" offset variables;
+  * Sprite use a vector to represent its direction,speed and origin Point;
+  * Sprite has new method isCollide to detect if itself collides with onether Sprite;
+  * COllision Detector now use an abstract CollisionDetect(hash1, hash2) method;
+  * Collision Detector now use Sprite.isCollide(otherSprite) methods
+  * CollisionBoundDetector now is able to manage Asimetrical object using the "NSEW" offset sprite;
+  * DPanel: new feature to set the Background Color

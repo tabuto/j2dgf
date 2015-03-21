@@ -1,0 +1,211 @@
+# Introduction #
+
+The J2DGAMEFRAMEWORK provides the necessary classes to implements a simple 2D Game in a window enviroment. This framework also provides a Sprites Collision Manager end a simple GUI template using the Java Swing libraries.
+By using this Framework, the developer's only think is how implements his classes and never mind about the 2D World, the collisions, etc...
+
+## How does it works ##
+
+It's very simple use this framework. The package is composed by:
+
+  * **com.tabuto.j2dgf.Sprite**
+
+Class represent a Sprite: an abstract class able to draw himself overriding the methods ThisIsMe(Graphics g). The sprite also has speed, direction, position and ACTIVE flag. To instanciate a classe extends Sprite, you must passed at super constructor method the Dimension of the CanvasPanel where Sprite live, end his start position as a pair of double values.
+Sprite use the Class Vettore to set position and angle. See the docs for further information.
+
+An example of a Class extends Sprite:
+
+```
+import java.awt.Color;
+import java.awt.Dimension;
+import java.awt.Graphics;
+
+import com.tabuto.j2dgf.Sprite;
+
+//This class in an example how to extends Sprite class
+
+public class Particle extends Sprite{
+
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -6361345090908913365L;
+
+	Color c = new Color(35,35,255);
+	private int radius;
+	public int mass;
+	
+	public Particle (Dimension d, double x, double y)
+	{
+		super(d,x,y);
+		radius = 1;
+		this.setSpeed(DefaultSpeed);
+	}
+	
+	public Color getColor(){return c;}
+	
+//This method set the draw for this Object
+
+	public void ThisIsMe(Graphics g)
+	{
+	g.setColor( this.getColor() );
+      g.fillOval((int)this.getX() - this.radius,(int) this.getY() - this.radius, 2*this.radius,2*this.radius);
+	}
+	
+	public void setRadius(int r)
+	{
+		if (r>0)
+			this.radius = r;
+	
+	//Important method for collisions routines
+	this.setMaxOffset(r, r, r, r);
+	
+	}
+	
+	public int getRadius(){return this.radius;}
+
+	public int getMass(){return this.mass;}
+
+}
+```
+
+Implements a new Sprite is very simple as you see, but remember to set the MaxOffset for collision. The setMaxOffset(double, double,double,double) set the Sprite edge rispectively on the North, South, East and West of this Sprite. Couse Particle are simple a Circle the Offset are only the radius.
+
+  * **com.tabuto.j2dgf.Group**
+
+Group class extends util.Vector to permit the developers to grouping Object extends Sprite. To add Sprite in a Group simply create new Group, and add Sprite using add(Object o) method.
+```
+//Create Group
+Group<Particle> particleGroup = new Group<Particle>();
+//Create Particle
+Particle p1 = new Particle(dim, 100,200);
+//add Particle to Group
+particleGroup.add(p1);
+```
+See the doc for other Group methods.
+
+  * **com.tabuto.j2dgf.collision.CollisionDetector**
+
+Collision Detector is an Abstract Class to detect Collision between Sprite of one or two group. To use it simply create a class that extends CollisionDetector and ovverride the method CollisionAction(int Sprite1, int Sprite2). If instanciate the CollisionDetector passing on costructor method just one Group, the detector checking the collision between the sprite of same group, instead, if passing two Groups, the detector check the collision between the Sprite owened by their respective Group. You can also set the distance (using setDistance(int)) method to define the minimum distance to execute CollisionAction method.
+An Example is useful:
+```
+public class ParticleCollision extends CollisionDetector{
+
+		Particle p1,p2;
+		//Constructor: use one Group
+	public ParticleCollision(Group<Particle> sp1)
+		 {
+			 super(sp1);
+		 }
+		 
+		 //Override CollisionAction
+		public void CollisionAction(int s1, int s2)
+		  {
+	//Cast to class extends Sprite 
+	//'cause the Group contains object that 
+	//not are Sprite but Particle!!
+
+			p1 = (Particle) this.group1.get(s1); 
+			p2 = (Particle) this.group1.get(s2); 
+			
+		double temp= this.group1.get(s1).getAngle();
+			
+			this.group1.get(s1).setAngleRadians(group1.get(s2).getAngle());
+			this.group1.get(s2).setAngleRadians(temp);
+			
+			if (p1.getMass()>p2.getMass())
+				p2.setRadius( p1.getRadius());
+			else
+				p1.setRadius( p2.getRadius());
+		  }
+	}
+}
+```
+
+  * **com.tabuto.j2dgf.collision.CollisionManager**
+A 2D Game as usually a lot kind of collisions, so for an easily management I create a CollisionManager class that simply manage the CollisionAction object and for each of they call the method CheckCollision(). In our Game we must create a collision manager object and register the collision we want to check!
+```
+//Create Collision Manager
+CollisionManager cm = new CollisionManager();
+
+//Instanciate the ParticleCollision Class previously create
+
+ParticleCollision pc = new ParticleCollision(particleGroup);
+
+//Register the collision on the collisionManager
+cm.addCollision(ParticleCollision pc);
+
+//when we want to check all the CollisionDetector registered in the CollisionManager:
+ cm.RunCollisionManager();
+```
+
+  * **com.tabuto.j2dgf.collision.CollisionBoundDetector**
+The CollisionBoundDetector is a concrete CollisionDetector specialized to detect collision between Group adds it and the Canvas Panel edge.
+For use it you must instanciate a new CollisionBoundDetector object and add the Sprite Group want to check the bound Collision.
+```
+CollisionBoundDetector cbd = new CollisionBoundDetector(particleGroup,DIM);
+
+//CollisionBoundDetector can use Reflection Collision
+		cbd.useReflection();
+
+  //Registering the collisionDetectors in a CollisionManager
+		cm.addCollision(cbd);
+```
+
+  * **com.tabuto.j2dgf.gui.J2DCanvasPanel**
+
+This Class extends a Jpanel to implements a CanvasPanel where Sprites can be draw. To use this class simply extends it, and overrides the following methods: initGame() and drawSprite(Graphics g).
+Here an example:
+```
+	//Override init stuff
+	public void initStuff()
+	{
+		particleGroup.setGroupName("particle");
+		//Init Particle Collision
+		pCollision = new ParticleCollision(particleGroup);
+		pCollision.setDistance(0);
+		//Init CollisionBoundDetector
+		cbd = new CollisionBoundDetector(particleGroup,DIM);
+	  
+		//CollisionBoundDetector must use Reflection Collision
+		cbd.useReflection();
+		
+		//Registering the collisionDetectors in a CollisionManager
+		cm.addCollision(cbd);
+		cm.addCollision(pCollision);
+		
+		//Init the sprites
+		for (int i = 0; i< ( N_Particles );i++)
+		{
+			//Random coordinates
+			int RandomX = (int) (1+Math.random() * (DIM.width -5) );
+			int RandomY = (int) (1+Math.random() * (DIM.height-5) );
+			//Create a new Particle SPrite
+			pArray[i] = new Particle(DIM,RandomX , RandomY);
+			//Random Angle
+			pArray[i].setAngleRadians(Math.random()*2 * Math.PI );
+			//Random radius
+			pArray[i].setRadius(  (int)( 1+Math.random()*11 ));
+			pArray[i].setSpeed(80);
+		    //Add the new Particle in the ParticleGroup
+		    particleGroup.add(pArray[i]);
+		}		
+    }
+
+	//Override the method for Sprite movement
+	 protected void drawSprite(Graphics g)
+	    {
+		    //Draw the Sprite and check collision
+	    	for(int i=0;i<N_Particles;i++)
+	          {
+	    		//Moving the sprite
+	    		particleGroup.get(i).move();
+	    		//CheckCollision
+	    		 cm.RunCollisionManager();
+	    		 //Draw the Sprites
+	    		particleGroup.get(i).drawMe(g);
+	    	   
+	    	  }
+	    }
+```
+
+The Class J2DCanvasPanel is a thread that execute continually the drawStuff() method. This method use the double buffer strategy to improve the framework performance. This method execute drawSprite() that user o developers override to draw the game sprites.
