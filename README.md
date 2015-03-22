@@ -1,7 +1,10 @@
 # J2DGF 
 Java 2-D Game Framework
+
 HomePage: [http://tabuto.github.io/j2dgf]
+
 Download Latest: [https://github.com/tabuto/j2dgf/releases/download/v.0.7.3/J2DGF_v0.7.3_source_bin_doc.jar]
+
 The J2DGAMEFRAMEWORK provides the necessary classes to implements a simple 2D Game in a window enviroment.
 This framework also provides a Sprites Collision Manager end a simple GUI template using the Java Swing libraries.
 By using this Framework, the developer's only think is how implements his classes and never mind about the 2D World, the collisions, etc...
